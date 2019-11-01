@@ -1,24 +1,24 @@
-# instalacion y configuracion de componentes requeridos por el proyecto
+# Instalacion y configuracion de componentes requeridos por el proyecto
 
 
 
-## instalacion de Composer
+## Instalacion de Composer
 
 > ir al siguiente [enlace](https://getcomposer.org/download/)
-### descargar e instalar Composer
+### Descargar e instalar Composer
 
 
-## instalacion de NodeJS
+## Instalacion de NodeJS
 
 > descargar el archivo de instalacion desde [aqui](https://nodejs.org/es/download/)
-### descargar e instalar NodeJS
+### Descargar e instalar NodeJS
 
 
-## dependencias del proyecto
+## Dependencias del proyecto
 
-### agregar sistema de autenticacion de Laravel 
+### Agregar sistema de autenticacion de Laravel 
 > composer require laravel/ui
 > php artisan ui vue --auth
 
-### dependencias de NodeJS
+### Dependencias de NodeJS
 > npm install
