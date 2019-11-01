@@ -26,7 +26,7 @@
 
 
 
-***importante***
+***importante!!!***
 el proyecto por el momento esta pensado en funcionar en un servidor local, por ello se tiene que realizar los siguientes pasos para la creacion de la base de datos del proyecto
 
 > crear una base de datos
