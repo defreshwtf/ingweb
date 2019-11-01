@@ -81,7 +81,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    Sistema de Citas Para Asesorias
                 </div>
 
                 <div class="links">
