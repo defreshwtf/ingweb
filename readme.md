@@ -10,8 +10,8 @@
 
 ## Instalacion de NodeJS
 
-> descargar el archivo de instalacion desde [aqui](https://nodejs.org/es/download/)
 ### Descargar e instalar NodeJS
+> descargar el archivo de instalacion desde [aqui](https://nodejs.org/es/download/)
 
 
 ## Dependencias del proyecto
