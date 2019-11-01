@@ -4,8 +4,8 @@
 
 ## Instalacion de Composer
 
-> ir al siguiente [enlace](https://getcomposer.org/download/)
 ### Descargar e instalar Composer
+> ir al siguiente [enlace](https://getcomposer.org/download/)
 
 
 ## Instalacion de NodeJS
