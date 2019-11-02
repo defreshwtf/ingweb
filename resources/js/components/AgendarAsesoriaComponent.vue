@@ -16,7 +16,7 @@
                                 v-model="nuevaAsesoria.profesor"
                             ></v-autocomplete>
 
-                            <p class="text-center">Selecciona el Horario</p>
+                            <p class="text-center">Selecciona la fecha y el Horario</p>
                             <v-row justify="space-around">
                                 <v-date-picker
                                     v-model="nuevaAsesoria.fecha"

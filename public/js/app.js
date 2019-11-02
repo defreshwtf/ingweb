@@ -37278,7 +37278,7 @@ var render = function() {
                   }),
                   _vm._v(" "),
                   _c("p", { staticClass: "text-center" }, [
-                    _vm._v("Selecciona el Horario")
+                    _vm._v("Selecciona la fecha y el Horario")
                   ]),
                   _vm._v(" "),
                   _c(

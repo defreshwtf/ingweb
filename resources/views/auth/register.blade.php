@@ -61,6 +61,21 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <div class="col-md-4 offset-md-4">
+                                <div class="form-check">
+                                    <label class="form-select-label" for="tipoAlumno">
+                                        {{ __('Soy') }}
+                                    </label>
+                                    <select class="form-select" type="radio" name="tipoAlumno" id="tipoAlumno" {{ old('tipoAlumno') }}>
+                                        <option value="profesor">Profesor</option>
+                                        <option value="alumno">Alumno</option>
+                                    </select>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
