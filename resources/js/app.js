@@ -7,8 +7,9 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
-import '@mdi/font/css/materialdesignicons.css'
+
 import Vuetify from 'vuetify'
+
 Vue.use(Vuetify)
 /**
  * The following block of code may be used to automatically register your

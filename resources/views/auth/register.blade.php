@@ -2,9 +2,11 @@
 
 @section('content')
 <register-component
+    :route_register="{{json_encode(route('register'))}}"
 >
 </register-component>
 
+{{-- 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -78,4 +80,6 @@
         </div>
     </div>
 </div>
+ --}}
+
 @endsection

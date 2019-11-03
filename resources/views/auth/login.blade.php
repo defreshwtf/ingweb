@@ -1,7 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-<login-component></login-component>
+<login-component
+    :route_login="{{json_encode(route('login'))}}"
+    :route_password_request="{{json_encode(route('password.request'))}}"
+    :route_register="{{json_encode(route('register'))}}"
+></login-component>
+{{-- 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -71,4 +76,6 @@
         </div>
     </div>
 </div>
+ --}}
+
 @endsection
