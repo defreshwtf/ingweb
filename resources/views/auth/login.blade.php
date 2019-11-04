@@ -5,6 +5,7 @@
     :route_login="{{json_encode(route('login'))}}"
     :route_password_request="{{json_encode(route('password.request'))}}"
     :route_register="{{json_encode(route('register'))}}"
+    :route_home="{{json_encode(route("home"))}}"
 ></login-component>
 {{-- 
 <div class="container">

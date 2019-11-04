@@ -4,9 +4,22 @@
             <v-card style="margin: 20vh 0;">
                 <v-card-title>Login</v-card-title>
                 <v-card-text>
-                    <v-form ref="form" @submit.prevent="validate" @click.native="verifica_errores_autenticacion">
-                        <v-text-field label="email" v-model="email" :rules="[rules.requerid, rules.email, rules.auth_error]"></v-text-field>
-                        <v-text-field label="password" v-model="password" type="password" :rules="[rules.requerid, rules.password, rules.auth_error]"></v-text-field>
+                    <v-form
+                        ref="form"
+                        @submit.prevent="validate"
+                        @click.native="verifica_errores_autenticacion"
+                    >
+                        <v-text-field
+                            label="email"
+                            v-model="email"
+                            :rules="[rules.requerid, rules.email, rules.auth_error]"
+                        ></v-text-field>
+                        <v-text-field
+                            label="password"
+                            v-model="password"
+                            type="password"
+                            :rules="[rules.requerid, rules.password, rules.auth_error]"
+                        ></v-text-field>
                         <v-col md="6" offset-md="3">
                             <v-switch color="green" label="Remember Me" v-model="remember"></v-switch>
                         </v-col>
@@ -37,14 +50,23 @@
                 </v-card-text>
             </v-card>
         </v-col>
+        <v-overlay :value="overlay">
+            <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
     </div>
 </template>
 
 <script>
 export default {
-    props: ["route_login", "route_password_request", "route_register"],
+    props: [
+        "route_login",
+        "route_password_request",
+        "route_register",
+        "route_home"
+    ],
     data() {
         return {
+            overlay: false,
             email: "",
             auth_error: true,
             password: "",
@@ -54,17 +76,25 @@ export default {
                 email: value =>
                     /^[\w|\.]+@[\w|\.]+$/.test(value) ||
                     "ingresa un email valido",
-                auth_error: value =>
-                    this.auth_error || this.auth_error,
+                auth_error: value => this.auth_error || this.auth_error,
                 password: value =>
                     /^\w+$/.test(value) ||
-                    "ingresa solo letras, digitos y guines bajos",
+                    "ingresa solo letras, digitos y guines bajos"
             }
         };
     },
+    watch: {
+        overlay(val) {
+            val &&
+                setTimeout(() => {
+                    this.overlay = false;
+                    window.location.href = this.route_home;
+                }, 2000);
+        }
+    },
     methods: {
-        verifica_errores_autenticacion(){
-            if(this.auth_error !== true) {
+        verifica_errores_autenticacion() {
+            if (this.auth_error !== true) {
                 this.auth_error = true;
                 this.$refs.form.validate();
             }
@@ -79,10 +109,11 @@ export default {
                     })
                     .then(response => {
                         console.log(response);
-                        this.$refs.form.reset();
+                        this.overlay = !this.overlay;
                     })
                     .catch(error => {
-                        this.auth_error = error.response.data.errors["email"][0];
+                        this.auth_error =
+                            error.response.data.errors["email"][0];
                         this.$refs.form.validate();
                     });
             }

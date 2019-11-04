@@ -22,7 +22,10 @@ Vue.use(Vuetify)
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('home-component', require('./components/HomeComponent.vue').default);
+Vue.component('home-component', require('./components/home/HomeComponent.vue').default);
+Vue.component('home-profesor-component', require('./components/home/HomeProfesorComponent.vue').default);
+Vue.component('home-alumno-component', require('./components/home/HomeAlumnoComponent.vue').default);
+
 Vue.component('welcome-component', require('./components/WelcomeComponent.vue').default);
 
 Vue.component('login-component', require('./components/auth/LoginComponent.vue').default);

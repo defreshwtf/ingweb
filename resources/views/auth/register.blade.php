@@ -3,6 +3,7 @@
 @section('content')
 <register-component
     :route_register="{{json_encode(route('register'))}}"
+    :route_home="{{json_encode(route("home"))}}"
 >
 </register-component>
 

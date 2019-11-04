@@ -42,14 +42,18 @@
                 </v-card-text>
             </v-card>
         </v-col>
+        <v-overlay :value="overlay">
+            <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
     </div>
 </template>
 
 <script>
 export default {
-    props: ["route_register"],
+    props: ["route_register", "route_home"],
     data() {
         return {
+            overlay: false,
             itemsTipoUsuario: ["Profesor", "Alumno"],
             name: "",
             email: "",
@@ -70,6 +74,14 @@ export default {
             }
         };
     },
+    watch:{
+        overlay(val) {
+            val && setTimeout(() => {
+                this.overlay = false;
+                window.location.href= this.route_home;
+            }, 2000);
+        },
+    },
     methods: {
         validate() {
             if (this.$refs.form.validate()) {
@@ -83,7 +95,7 @@ export default {
                     })
                     .then(response => {
                         console.log(response);
-                        this.$refs.form.reset();
+                        this.overlay = !this.overlay;
                     })
                     .catch(error => {
                         console.log(error.response);
