@@ -77,8 +77,9 @@ export default {
                         password: this.password,
                         remember: this.remember
                     })
-                    .then(function(response) {
+                    .then(response => {
                         console.log(response);
+                        this.$refs.form.reset();
                     })
                     .catch(error => {
                         this.auth_error = error.response.data.errors["email"][0];

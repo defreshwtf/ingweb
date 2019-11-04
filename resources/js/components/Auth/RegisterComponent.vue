@@ -81,10 +81,11 @@ export default {
                         password_confirmation: this.passwordConfirm,
                         tipo_usuario: this.tipoUsuario
                     })
-                    .then(function(response) {
+                    .then(response => {
                         console.log(response);
+                        this.$refs.form.reset();
                     })
-                    .catch(function(error) {
+                    .catch(error => {
                         console.log(error.response);
                     });
             }

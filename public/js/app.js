@@ -2144,6 +2144,8 @@ __webpack_require__.r(__webpack_exports__);
           remember: this.remember
         }).then(function (response) {
           console.log(response);
+
+          _this2.$refs.form.reset();
         })["catch"](function (error) {
           _this2.auth_error = error.response.data.errors["email"][0];
 
@@ -2245,6 +2247,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     validate: function validate() {
+      var _this2 = this;
+
       if (this.$refs.form.validate()) {
         axios.post(this.route_register, {
           name: this.name,
@@ -2254,6 +2258,8 @@ __webpack_require__.r(__webpack_exports__);
           tipo_usuario: this.tipoUsuario
         }).then(function (response) {
           console.log(response);
+
+          _this2.$refs.form.reset();
         })["catch"](function (error) {
           console.log(error.response);
         });
