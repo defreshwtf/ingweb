@@ -2038,6 +2038,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["route_login", "route_password_request", "route_register", "route_home"],
   data: function data() {
@@ -2164,6 +2170,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["route_register", "route_home"],
   data: function data() {
@@ -2177,21 +2197,26 @@ __webpack_require__.r(__webpack_exports__);
       password: "",
       passwordConfirm: "",
       tipoUsuario: "",
+      materiasSeleccionadas: [],
+      materiasDisponibles: ["Diseño Digital", "Metodologia de la Programacion", "Programacion 1", "Ensamblador"],
       rules: {
-        requerid: function requerid(value) {
-          return !!value || "requerido";
+        requerid: function requerid(v) {
+          return !!v || "requerido";
         },
-        max: function max(value) {
-          return value.length <= 20 || "max 20 caracteres";
+        requeridArray: function requeridArray(v) {
+          return !!v.length || "campo requerido";
         },
-        email: function email(value) {
-          return /^[\w|\.]+@[\w|\.]+$/.test(value) || "ingresa un email valido";
+        max: function max(v) {
+          return !!v && v.length <= 20 || "max 20 caracteres";
         },
-        passwordConfirm: function passwordConfirm(value) {
-          return value == _this.password || "verifica las contraseñas";
+        email: function email(v) {
+          return /^[\w|\.]+@[\w|\.]+$/.test(v) || "ingresa un email valido";
         },
-        password: function password(value) {
-          return /^\w+$/.test(value) || "ingresa solo letras, digitos y guines bajos";
+        passwordConfirm: function passwordConfirm(v) {
+          return v == _this.password || "verifica las contraseñas";
+        },
+        password: function password(v) {
+          return /^\w+$/.test(v) || "ingresa solo letras, digitos y guines bajos";
         }
       }
     };
@@ -2298,7 +2323,71 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      materias: ["materia1", "materia2", "materia3"],
+      profesores: ["profesores1", "profesores2", "profesores3"],
+      materia: "",
+      profesor: "",
+      tema: "",
+      rules_AgendaAsesoria: {
+        requerid: function requerid(v) {
+          return !!v || "campo requerido";
+        },
+        maxCaracteres: function maxCaracteres(v) {
+          return !!v && v.length <= 50 || "max 50 caracteres";
+        }
+      }
+    };
+  },
+  methods: {
+    submit: function submit() {
+      this.$refs.formAgendaAsesoria.validate();
+    }
+  },
+  beforeMount: {
+    setMaterias: function setMaterias() {// axios.get()
+      // .then(response => console.log(response))
+      // .catch(error => console.log(error));
+    }
+  },
+  watch: {
+    materia: function materia() {// axios.get()
+      // .then(response => console.log(response))
+      // .catch(error => console.log(error));
+    }
+  }
+});
 
 /***/ }),
 
@@ -2311,6 +2400,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
 //
 //
 //
@@ -2342,8 +2433,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
 //
 //
 //
@@ -37983,160 +38072,187 @@ var render = function() {
     "div",
     [
       _c(
-        "v-col",
-        { attrs: { md: "4", "offset-md": "4" } },
+        "v-row",
+        { attrs: { justify: "center" } },
         [
           _c(
-            "v-card",
-            { staticStyle: { margin: "20vh 0" } },
+            "v-col",
+            { attrs: { md: "6" } },
             [
-              _c("v-card-title", [_vm._v("Login")]),
-              _vm._v(" "),
               _c(
-                "v-card-text",
+                "v-card",
+                { staticStyle: { margin: "20vh 0" } },
                 [
+                  _c("v-card-title", [_vm._v("Login")]),
+                  _vm._v(" "),
                   _c(
-                    "v-form",
-                    {
-                      ref: "form",
-                      on: {
-                        submit: function($event) {
-                          $event.preventDefault()
-                          return _vm.validate($event)
-                        }
-                      },
-                      nativeOn: {
-                        click: function($event) {
-                          return _vm.verifica_errores_autenticacion($event)
-                        }
-                      }
-                    },
+                    "v-card-text",
                     [
-                      _c("v-text-field", {
-                        attrs: {
-                          label: "email",
-                          rules: [
-                            _vm.rules.requerid,
-                            _vm.rules.email,
-                            _vm.rules.auth_error
-                          ]
-                        },
-                        model: {
-                          value: _vm.email,
-                          callback: function($$v) {
-                            _vm.email = $$v
-                          },
-                          expression: "email"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("v-text-field", {
-                        attrs: {
-                          label: "password",
-                          type: "password",
-                          rules: [
-                            _vm.rules.requerid,
-                            _vm.rules.password,
-                            _vm.rules.auth_error
-                          ]
-                        },
-                        model: {
-                          value: _vm.password,
-                          callback: function($$v) {
-                            _vm.password = $$v
-                          },
-                          expression: "password"
-                        }
-                      }),
-                      _vm._v(" "),
                       _c(
-                        "v-col",
-                        { attrs: { md: "6", "offset-md": "3" } },
-                        [
-                          _c("v-switch", {
-                            attrs: { color: "green", label: "Remember Me" },
-                            model: {
-                              value: _vm.remember,
-                              callback: function($$v) {
-                                _vm.remember = $$v
-                              },
-                              expression: "remember"
+                        "v-form",
+                        {
+                          ref: "form",
+                          on: {
+                            submit: function($event) {
+                              $event.preventDefault()
+                              return _vm.validate($event)
                             }
-                          })
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "v-row",
+                          },
+                          nativeOn: {
+                            click: function($event) {
+                              return _vm.verifica_errores_autenticacion($event)
+                            }
+                          }
+                        },
                         [
                           _c(
-                            "v-col",
-                            { attrs: { "offset-md": "2" } },
+                            "v-row",
+                            { attrs: { justify: "center" } },
                             [
                               _c(
-                                "v-btn",
-                                { attrs: { type: "submit", outlined: "" } },
-                                [_vm._v("Login")]
+                                "v-col",
+                                { attrs: { md: "8" } },
+                                [
+                                  _c("v-text-field", {
+                                    attrs: {
+                                      label: "email",
+                                      rules: [
+                                        _vm.rules.requerid,
+                                        _vm.rules.email,
+                                        _vm.rules.auth_error
+                                      ]
+                                    },
+                                    model: {
+                                      value: _vm.email,
+                                      callback: function($$v) {
+                                        _vm.email = $$v
+                                      },
+                                      expression: "email"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("v-text-field", {
+                                    attrs: {
+                                      label: "password",
+                                      type: "password",
+                                      rules: [
+                                        _vm.rules.requerid,
+                                        _vm.rules.password,
+                                        _vm.rules.auth_error
+                                      ]
+                                    },
+                                    model: {
+                                      value: _vm.password,
+                                      callback: function($$v) {
+                                        _vm.password = $$v
+                                      },
+                                      expression: "password"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-row",
+                                    { attrs: { justify: "center" } },
+                                    [
+                                      _c("v-switch", {
+                                        attrs: {
+                                          color: "green",
+                                          label: "Remember Me"
+                                        },
+                                        model: {
+                                          value: _vm.remember,
+                                          callback: function($$v) {
+                                            _vm.remember = $$v
+                                          },
+                                          expression: "remember"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
                               )
                             ],
                             1
                           ),
                           _vm._v(" "),
                           _c(
-                            "v-col",
+                            "v-row",
+                            { attrs: { justify: "center" } },
                             [
                               _c(
-                                "v-btn",
-                                {
-                                  attrs: {
-                                    "x-small": "",
-                                    color: "red",
-                                    text: "",
-                                    href: _vm.route_password_request
-                                  }
-                                },
-                                [_vm._v("Forgot your password???")]
-                              )
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c("v-divider"),
-                      _vm._v(" "),
-                      _c(
-                        "v-row",
-                        [
-                          _c(
-                            "v-col",
-                            { attrs: { md: "3", "offset-md": "3" } },
-                            [
+                                "v-col",
+                                { attrs: { md: "2" } },
+                                [
+                                  _c(
+                                    "v-btn",
+                                    { attrs: { type: "submit", outlined: "" } },
+                                    [_vm._v("Login")]
+                                  )
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
                               _c(
-                                "v-btn",
-                                { attrs: { text: "", disabled: "" } },
-                                [_vm._v("not account???")]
+                                "v-col",
+                                { attrs: { md: "7" } },
+                                [
+                                  _c(
+                                    "v-btn",
+                                    {
+                                      attrs: {
+                                        "x-small": "",
+                                        color: "red",
+                                        text: "",
+                                        href: _vm.route_password_request
+                                      }
+                                    },
+                                    [_vm._v("Forgot your password???")]
+                                  )
+                                ],
+                                1
                               )
                             ],
                             1
                           ),
                           _vm._v(" "),
+                          _c("v-divider"),
+                          _vm._v(" "),
                           _c(
-                            "v-col",
-                            { attrs: { md: "6" } },
+                            "v-row",
+                            { attrs: { justify: "center" } },
                             [
                               _c(
-                                "v-btn",
-                                {
-                                  attrs: {
-                                    text: "",
-                                    color: "green",
-                                    href: _vm.route_register
-                                  }
-                                },
-                                [_vm._v("Register")]
+                                "v-col",
+                                { attrs: { md: "4" } },
+                                [
+                                  _c(
+                                    "v-btn",
+                                    { attrs: { text: "", disabled: "" } },
+                                    [_vm._v("not account???")]
+                                  )
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-col",
+                                { attrs: { md: "4" } },
+                                [
+                                  _c(
+                                    "v-btn",
+                                    {
+                                      attrs: {
+                                        text: "",
+                                        color: "green",
+                                        href: _vm.route_register
+                                      }
+                                    },
+                                    [_vm._v("Register")]
+                                  )
+                                ],
+                                1
                               )
                             ],
                             1
@@ -38198,7 +38314,7 @@ var render = function() {
     [
       _c(
         "v-col",
-        { attrs: { md: "4", "offset-md": "4" } },
+        { attrs: { md: "6", "offset-md": "3" } },
         [
           _c(
             "v-card",
@@ -38221,81 +38337,114 @@ var render = function() {
                       }
                     },
                     [
-                      _c("v-text-field", {
-                        attrs: {
-                          label: "name",
-                          rules: [_vm.rules.requerid, _vm.rules.max]
-                        },
-                        model: {
-                          value: _vm.name,
-                          callback: function($$v) {
-                            _vm.name = $$v
-                          },
-                          expression: "name"
-                        }
-                      }),
+                      _c(
+                        "v-row",
+                        { attrs: { align: "center", justify: "center" } },
+                        [
+                          _c(
+                            "v-col",
+                            { attrs: { cols: "6" } },
+                            [
+                              _c("v-text-field", {
+                                attrs: {
+                                  label: "name",
+                                  rules: [_vm.rules.requerid, _vm.rules.max]
+                                },
+                                model: {
+                                  value: _vm.name,
+                                  callback: function($$v) {
+                                    _vm.name = $$v
+                                  },
+                                  expression: "name"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                attrs: {
+                                  label: "email",
+                                  rules: [_vm.rules.requerid, _vm.rules.email]
+                                },
+                                model: {
+                                  value: _vm.email,
+                                  callback: function($$v) {
+                                    _vm.email = $$v
+                                  },
+                                  expression: "email"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                attrs: {
+                                  label: "password",
+                                  rules: [_vm.rules.requerid],
+                                  counter: "",
+                                  type: "password"
+                                },
+                                model: {
+                                  value: _vm.password,
+                                  callback: function($$v) {
+                                    _vm.password = $$v
+                                  },
+                                  expression: "password"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                attrs: {
+                                  label: "confirm password",
+                                  rules: [
+                                    _vm.rules.requerid,
+                                    _vm.rules.passwordConfirm
+                                  ],
+                                  counter: "",
+                                  type: "password"
+                                },
+                                model: {
+                                  value: _vm.passwordConfirm,
+                                  callback: function($$v) {
+                                    _vm.passwordConfirm = $$v
+                                  },
+                                  expression: "passwordConfirm"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("v-select", {
+                                attrs: {
+                                  items: _vm.itemsTipoUsuario,
+                                  label: "tipo Usuario",
+                                  rules: [_vm.rules.requerid]
+                                },
+                                model: {
+                                  value: _vm.tipoUsuario,
+                                  callback: function($$v) {
+                                    _vm.tipoUsuario = $$v
+                                  },
+                                  expression: "tipoUsuario"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
-                      _c("v-text-field", {
+                      _c("v-autocomplete", {
                         attrs: {
-                          label: "email",
-                          rules: [_vm.rules.requerid, _vm.rules.email]
+                          items: _vm.materiasDisponibles,
+                          filled: "",
+                          chips: "",
+                          label: "materias",
+                          multiple: "",
+                          rules: [_vm.rules.requeridArray],
+                          placeholder: "busca materia..."
                         },
                         model: {
-                          value: _vm.email,
+                          value: _vm.materiasSeleccionadas,
                           callback: function($$v) {
-                            _vm.email = $$v
+                            _vm.materiasSeleccionadas = $$v
                           },
-                          expression: "email"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("v-text-field", {
-                        attrs: {
-                          label: "password",
-                          rules: [_vm.rules.requerid],
-                          counter: "",
-                          type: "password"
-                        },
-                        model: {
-                          value: _vm.password,
-                          callback: function($$v) {
-                            _vm.password = $$v
-                          },
-                          expression: "password"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("v-text-field", {
-                        attrs: {
-                          label: "confirm password",
-                          rules: [
-                            _vm.rules.requerid,
-                            _vm.rules.passwordConfirm
-                          ],
-                          counter: "",
-                          type: "password"
-                        },
-                        model: {
-                          value: _vm.passwordConfirm,
-                          callback: function($$v) {
-                            _vm.passwordConfirm = $$v
-                          },
-                          expression: "passwordConfirm"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("v-select", {
-                        attrs: {
-                          items: _vm.itemsTipoUsuario,
-                          label: "tipo Usuario",
-                          rules: [_vm.rules.requerid]
-                        },
-                        model: {
-                          value: _vm.tipoUsuario,
-                          callback: function($$v) {
-                            _vm.tipoUsuario = $$v
-                          },
-                          expression: "tipoUsuario"
+                          expression: "materiasSeleccionadas"
                         }
                       }),
                       _vm._v(" "),
@@ -38364,58 +38513,163 @@ var render = function() {
     "div",
     [
       _c(
-        "v-container",
-        { staticStyle: { "margin-top": "20vh", "margin-bottom": "20vh" } },
+        "v-row",
         [
           _c(
-            "v-row",
+            "v-col",
+            { attrs: { cols: 8 } },
             [
               _c(
-                "v-col",
-                { attrs: { cols: 8 } },
+                "v-row",
                 [
                   _c(
-                    "v-row",
+                    "v-col",
+                    { attrs: { cols: 12 } },
                     [
                       _c(
-                        "v-col",
-                        { attrs: { cols: 12 } },
+                        "v-card",
                         [
+                          _c("v-card-title", [
+                            _vm._v("Administrar Asesorias Alumno")
+                          ]),
+                          _vm._v(" "),
                           _c(
-                            "v-card",
+                            "v-card-text",
                             [
-                              _c("v-card-title", [
-                                _vm._v("Administrar Asesorias Alumno")
-                              ]),
-                              _vm._v(" "),
-                              _c("v-card-text", [
-                                _vm._v(
-                                  "\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            "
-                                )
-                              ])
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "v-col",
-                        { attrs: { cols: 12 } },
-                        [
-                          _c(
-                            "v-card",
-                            [
-                              _c("v-card-title", [
-                                _vm._v("Administrar Asesorias")
-                              ]),
-                              _vm._v(" "),
-                              _c("v-card-text", [
-                                _vm._v(
-                                  "\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            "
-                                )
-                              ])
+                              _c(
+                                "v-container",
+                                [
+                                  _c(
+                                    "v-form",
+                                    {
+                                      ref: "formAgendaAsesoria",
+                                      attrs: { action: "" },
+                                      on: {
+                                        submit: function($event) {
+                                          $event.preventDefault()
+                                          return _vm.submit($event)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "v-row",
+                                        {
+                                          attrs: {
+                                            align: "center",
+                                            justify: "center"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "v-col",
+                                            { attrs: { cols: 8 } },
+                                            [
+                                              _c("v-autocomplete", {
+                                                attrs: {
+                                                  rules: [
+                                                    _vm.rules_AgendaAsesoria
+                                                      .requerid
+                                                  ],
+                                                  label: "materia",
+                                                  items: _vm.materias
+                                                },
+                                                model: {
+                                                  value: _vm.materia,
+                                                  callback: function($$v) {
+                                                    _vm.materia = $$v
+                                                  },
+                                                  expression: "materia"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("v-autocomplete", {
+                                                attrs: {
+                                                  rules: [
+                                                    _vm.rules_AgendaAsesoria
+                                                      .requerid
+                                                  ],
+                                                  label: "profesor",
+                                                  items: _vm.profesores
+                                                },
+                                                model: {
+                                                  value: _vm.profesor,
+                                                  callback: function($$v) {
+                                                    _vm.profesor = $$v
+                                                  },
+                                                  expression: "profesor"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("v-text-field", {
+                                                attrs: {
+                                                  rules: [
+                                                    _vm.rules_AgendaAsesoria
+                                                      .requerid,
+                                                    _vm.rules_AgendaAsesoria
+                                                      .maxCaracteres
+                                                  ],
+                                                  label: "tema",
+                                                  counter: ""
+                                                },
+                                                model: {
+                                                  value: _vm.tema,
+                                                  callback: function($$v) {
+                                                    _vm.tema = $$v
+                                                  },
+                                                  expression: "tema"
+                                                }
+                                              })
+                                            ],
+                                            1
+                                          )
+                                        ],
+                                        1
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "v-row",
+                                        {
+                                          staticClass:
+                                            "d-flex justify-space-around"
+                                        },
+                                        [
+                                          _c(
+                                            "v-btn",
+                                            {
+                                              attrs: {
+                                                type: "submit",
+                                                outlined: "",
+                                                color: "green"
+                                              }
+                                            },
+                                            [_vm._v("agendar")]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "v-btn",
+                                            {
+                                              attrs: {
+                                                outlined: "",
+                                                color: "yellow"
+                                              },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.$refs.formAgendaAsesoria.resetValidation()
+                                                }
+                                              }
+                                            },
+                                            [_vm._v("reset")]
+                                          )
+                                        ],
+                                        1
+                                      )
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              )
                             ],
                             1
                           )
@@ -38424,37 +38678,56 @@ var render = function() {
                       )
                     ],
                     1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-col",
+                    { attrs: { cols: 12 } },
+                    [
+                      _c(
+                        "v-card",
+                        [
+                          _c("v-card-title", [_vm._v("Administrar Asesorias")]),
+                          _vm._v(" "),
+                          _c("v-card-text", [
+                            _vm._v(
+                              "\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                        "
+                            )
+                          ])
+                        ],
+                        1
+                      )
+                    ],
+                    1
                   )
                 ],
                 1
-              ),
-              _vm._v(" "),
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-col",
+            { attrs: { cols: 4 } },
+            [
               _c(
-                "v-col",
-                { attrs: { cols: 4 } },
+                "v-row",
                 [
                   _c(
-                    "v-row",
+                    "v-col",
+                    { attrs: { cols: 12 } },
                     [
                       _c(
-                        "v-col",
-                        { attrs: { cols: 12 } },
+                        "v-card",
                         [
-                          _c(
-                            "v-card",
-                            [
-                              _c("v-card-title", [
-                                _vm._v("Administrar Asesorias")
-                              ]),
-                              _vm._v(" "),
-                              _c("v-card-text", [
-                                _vm._v(
-                                  "\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            "
-                                )
-                              ])
-                            ],
-                            1
-                          )
+                          _c("v-card-title", [_vm._v("Administrar Asesorias")]),
+                          _vm._v(" "),
+                          _c("v-card-text", [
+                            _vm._v(
+                              "\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                        "
+                            )
+                          ])
                         ],
                         1
                       )
@@ -38499,9 +38772,16 @@ var render = function() {
   return _c(
     "div",
     [
-      _vm.user_data["tipo_usuario"] == "Profesor"
-        ? _c("home-profesor-component")
-        : _c("home-alumno-component")
+      _c(
+        "v-container",
+        { staticStyle: { "margin-top": "20vh", "margin-bottom": "20vh" } },
+        [
+          _vm.user_data["tipo_usuario"] == "Profesor"
+            ? _c("home-profesor-component")
+            : _c("home-alumno-component")
+        ],
+        1
+      )
     ],
     1
   )
@@ -38532,61 +38812,52 @@ var render = function() {
     "div",
     [
       _c(
-        "v-container",
-        { staticStyle: { "margin-top": "20vh", "margin-bottom": "20vh" } },
+        "v-row",
         [
           _c(
-            "v-row",
+            "v-col",
+            { attrs: { cols: 8 } },
             [
               _c(
-                "v-col",
-                { attrs: { cols: 8 } },
+                "v-row",
                 [
                   _c(
-                    "v-row",
+                    "v-col",
+                    { attrs: { cols: 12 } },
                     [
                       _c(
-                        "v-col",
-                        { attrs: { cols: 12 } },
+                        "v-card",
                         [
-                          _c(
-                            "v-card",
-                            [
-                              _c("v-card-title", [
-                                _vm._v("Administrar Asesorias Profesor")
-                              ]),
-                              _vm._v(" "),
-                              _c("v-card-text", [
-                                _vm._v(
-                                  "\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            "
-                                )
-                              ])
-                            ],
-                            1
-                          )
+                          _c("v-card-title", [
+                            _vm._v("Administrar Asesorias Profesor")
+                          ]),
+                          _vm._v(" "),
+                          _c("v-card-text", [
+                            _vm._v(
+                              "\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                        "
+                            )
+                          ])
                         ],
                         1
-                      ),
-                      _vm._v(" "),
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-col",
+                    { attrs: { cols: 12 } },
+                    [
                       _c(
-                        "v-col",
-                        { attrs: { cols: 12 } },
+                        "v-card",
                         [
-                          _c(
-                            "v-card",
-                            [
-                              _c("v-card-title", [
-                                _vm._v("Administrar Asesorias")
-                              ]),
-                              _vm._v(" "),
-                              _c("v-card-text", [
-                                _vm._v(
-                                  "\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            "
-                                )
-                              ])
-                            ],
-                            1
-                          )
+                          _c("v-card-title", [_vm._v("Administrar Asesorias")]),
+                          _vm._v(" "),
+                          _c("v-card-text", [
+                            _vm._v(
+                              "\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                        "
+                            )
+                          ])
                         ],
                         1
                       )
@@ -38595,34 +38866,32 @@ var render = function() {
                   )
                 ],
                 1
-              ),
-              _vm._v(" "),
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-col",
+            { attrs: { cols: 4 } },
+            [
               _c(
-                "v-col",
-                { attrs: { cols: 4 } },
+                "v-row",
                 [
                   _c(
-                    "v-row",
+                    "v-col",
+                    { attrs: { cols: 12 } },
                     [
                       _c(
-                        "v-col",
-                        { attrs: { cols: 12 } },
+                        "v-card",
                         [
-                          _c(
-                            "v-card",
-                            [
-                              _c("v-card-title", [
-                                _vm._v("Administrar Asesorias")
-                              ]),
-                              _vm._v(" "),
-                              _c("v-card-text", [
-                                _vm._v(
-                                  "\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            "
-                                )
-                              ])
-                            ],
-                            1
-                          )
+                          _c("v-card-title", [_vm._v("Administrar Asesorias")]),
+                          _vm._v(" "),
+                          _c("v-card-text", [
+                            _vm._v(
+                              "\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                        "
+                            )
+                          ])
                         ],
                         1
                       )
