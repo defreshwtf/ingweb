@@ -2184,6 +2184,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["route_register", "route_home"],
   data: function data() {
@@ -2191,6 +2200,8 @@ __webpack_require__.r(__webpack_exports__);
 
     return {
       overlay: false,
+      muestraInputMaterias: false,
+      error_usuarioExistente: true,
       itemsTipoUsuario: ["Profesor", "Alumno"],
       name: "",
       email: "",
@@ -2198,13 +2209,13 @@ __webpack_require__.r(__webpack_exports__);
       passwordConfirm: "",
       tipoUsuario: "",
       materiasSeleccionadas: [],
-      materiasDisponibles: ["Diseño Digital", "Metodologia de la Programacion", "Programacion 1", "Ensamblador"],
+      materiasDisponibles: ["Formación Humana y Social", "DHPC", "DHTIC", "Matemáticas Elementales", "Algebra Superior", "Cálculo Diferencial", "Matemáticas Discretas", "Geometría Análitica con Algebra Lineal", "Cálculo Integral", "Probabilidad y Estadística", "Ecuaciones Diferenciales", "HAA", "Redacción", "Metodología de la Programación", "Ensamblador", "Programación I", "Sistemas Operativos I", "Programación II", "Estructuras de Datos", "Graficación", "Innovación y Talento Emprendedor", "Métodos Numéricos", "Programación Concurrente y Paralela", "Circuitos Eléctricos", "Diseño Digital", "Sistemas Operativos II", "Circuitos Electrónicos", "Programación Distribuida", "Sistemas Digitales", "Microprocesadores e Interfaces", "Transmisión y Comunicación de Datos", "Base de Datos", "Modelo de Redes", "Administración de Redes", "Redes Inalámbricas", "Análisis y Diseño de Algoritmos", "Arquitectura de Computadoras", "Sistemas Empotrados", "Ingeniería de Software", "Desarrollo de Aplicaciones Móviles", "Administración de Proyectos", "Proyectos I+D I", "Proyectos I+D II", "Tópicos en Ingeniería", "Arquitectura Avanzada de Computadoras", "Control Digital", "Diseño de Sistemas de Tiempo Real", "Sistemas de Tiempo Real", "Ingeniería Web", "Minería de Datos", "Tratamiento de la Información", "Ingeniería de Software Avanzada", "Introducción a la Robótica", "Aplicaciones Multimedia", "Técnicas de Inteligencia Artificial", "Interacción Humano Computadora", "Procesamiento Digital de Imágenes", "Animación por Computadora", "Simulación", "Investigación de Operaciones", "Aplicaciones Web", "Intercomunicación y Seguridad en Redes", "Cómputo Obicuo", "Introducción a los Compiladores"],
       rules: {
         requerid: function requerid(v) {
           return !!v || "requerido";
         },
-        requeridArray: function requeridArray(v) {
-          return !!v.length || "campo requerido";
+        requeridMaterias: function requeridMaterias(v) {
+          return !_this.muestraInputMaterias || !!v.length || "campo requerido";
         },
         max: function max(v) {
           return !!v && v.length <= 20 || "max 20 caracteres";
@@ -2217,6 +2228,12 @@ __webpack_require__.r(__webpack_exports__);
         },
         password: function password(v) {
           return /^\w+$/.test(v) || "ingresa solo letras, digitos y guines bajos";
+        },
+        espaciosBlanco: function espaciosBlanco(v) {
+          return !/\s+/.test(v) || "elimina espacios en blanco";
+        },
+        usuarioExistente: function usuarioExistente(v) {
+          return _this.error_usuarioExistente || _this.error_usuarioExistente;
         }
       }
     };
@@ -2229,9 +2246,22 @@ __webpack_require__.r(__webpack_exports__);
         _this2.overlay = false;
         window.location.href = _this2.route_home;
       }, 2000);
+    },
+    tipoUsuario: function tipoUsuario() {
+      if (this.tipoUsuario == "Profesor") {
+        this.muestraInputMaterias = true;
+      } else {
+        this.muestraInputMaterias = false;
+      }
     }
   },
   methods: {
+    restableceErroresValidacion: function restableceErroresValidacion() {
+      if (this.error_usuarioExistente !== true) {
+        this.error_usuarioExistente = true;
+        this.$refs.form.validate();
+      }
+    },
     validate: function validate() {
       var _this3 = this;
 
@@ -2241,12 +2271,18 @@ __webpack_require__.r(__webpack_exports__);
           email: this.email,
           password: this.password,
           password_confirmation: this.passwordConfirm,
-          tipo_usuario: this.tipoUsuario
+          tipo_usuario: this.tipoUsuario,
+          materias_seleccionadas: this.materiasSeleccionadas
         }).then(function (response) {
-          console.log(response);
           _this3.overlay = !_this3.overlay;
         })["catch"](function (error) {
-          console.log(error.response);
+          console.log(error);
+
+          if (error.response.data.errors.email != undefined) {
+            _this3.error_usuarioExistente = error.response.data.errors.email[0];
+
+            _this3.$refs.form.validate();
+          }
         });
       }
     }
@@ -2375,12 +2411,13 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.formAgendaAsesoria.validate();
     }
   },
-  beforeMount: {
-    setMaterias: function setMaterias() {// axios.get()
-      // .then(response => console.log(response))
-      // .catch(error => console.log(error));
-    }
-  },
+  // beforeMount:{
+  //     setMaterias(){
+  //         axios.get()
+  //         .then(response => console.log(response))
+  //         .catch(error => console.log(error));
+  //     },
+  // },
   watch: {
     materia: function materia() {// axios.get()
       // .then(response => console.log(response))
@@ -38313,149 +38350,192 @@ var render = function() {
     "div",
     [
       _c(
-        "v-col",
-        { attrs: { md: "6", "offset-md": "3" } },
+        "v-row",
+        { attrs: { justify: "center" } },
         [
           _c(
-            "v-card",
-            { staticStyle: { margin: "20vh 0" } },
+            "v-col",
+            { attrs: { md: "6" } },
             [
-              _c("v-card-title", [_vm._v("Register")]),
-              _vm._v(" "),
               _c(
-                "v-card-text",
+                "v-card",
+                { staticStyle: { margin: "20vh 0" } },
                 [
+                  _c("v-card-title", [_vm._v("Register")]),
+                  _vm._v(" "),
                   _c(
-                    "v-form",
-                    {
-                      ref: "form",
-                      on: {
-                        submit: function($event) {
-                          $event.preventDefault()
-                          return _vm.validate($event)
-                        }
-                      }
-                    },
+                    "v-card-text",
                     [
                       _c(
-                        "v-row",
-                        { attrs: { align: "center", justify: "center" } },
+                        "v-form",
+                        {
+                          ref: "form",
+                          on: {
+                            submit: function($event) {
+                              $event.preventDefault()
+                              return _vm.validate($event)
+                            }
+                          },
+                          nativeOn: {
+                            click: function($event) {
+                              return _vm.restableceErroresValidacion($event)
+                            }
+                          }
+                        },
                         [
                           _c(
-                            "v-col",
-                            { attrs: { cols: "6" } },
+                            "v-row",
+                            { attrs: { justify: "center" } },
                             [
-                              _c("v-text-field", {
-                                attrs: {
-                                  label: "name",
-                                  rules: [_vm.rules.requerid, _vm.rules.max]
-                                },
-                                model: {
-                                  value: _vm.name,
-                                  callback: function($$v) {
-                                    _vm.name = $$v
-                                  },
-                                  expression: "name"
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("v-text-field", {
-                                attrs: {
-                                  label: "email",
-                                  rules: [_vm.rules.requerid, _vm.rules.email]
-                                },
-                                model: {
-                                  value: _vm.email,
-                                  callback: function($$v) {
-                                    _vm.email = $$v
-                                  },
-                                  expression: "email"
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("v-text-field", {
-                                attrs: {
-                                  label: "password",
-                                  rules: [_vm.rules.requerid],
-                                  counter: "",
-                                  type: "password"
-                                },
-                                model: {
-                                  value: _vm.password,
-                                  callback: function($$v) {
-                                    _vm.password = $$v
-                                  },
-                                  expression: "password"
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("v-text-field", {
-                                attrs: {
-                                  label: "confirm password",
-                                  rules: [
-                                    _vm.rules.requerid,
-                                    _vm.rules.passwordConfirm
-                                  ],
-                                  counter: "",
-                                  type: "password"
-                                },
-                                model: {
-                                  value: _vm.passwordConfirm,
-                                  callback: function($$v) {
-                                    _vm.passwordConfirm = $$v
-                                  },
-                                  expression: "passwordConfirm"
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("v-select", {
-                                attrs: {
-                                  items: _vm.itemsTipoUsuario,
-                                  label: "tipo Usuario",
-                                  rules: [_vm.rules.requerid]
-                                },
-                                model: {
-                                  value: _vm.tipoUsuario,
-                                  callback: function($$v) {
-                                    _vm.tipoUsuario = $$v
-                                  },
-                                  expression: "tipoUsuario"
-                                }
-                              })
+                              _c(
+                                "v-col",
+                                { attrs: { md: "6" } },
+                                [
+                                  _c("v-text-field", {
+                                    attrs: {
+                                      label: "name",
+                                      rules: [
+                                        _vm.rules.requerid,
+                                        _vm.rules.max,
+                                        _vm.rules.espaciosBlanco
+                                      ]
+                                    },
+                                    model: {
+                                      value: _vm.name,
+                                      callback: function($$v) {
+                                        _vm.name = $$v
+                                      },
+                                      expression: "name"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("v-text-field", {
+                                    attrs: {
+                                      label: "email",
+                                      rules: [
+                                        _vm.rules.requerid,
+                                        _vm.rules.email,
+                                        _vm.rules.espaciosBlanco,
+                                        _vm.rules.usuarioExistente
+                                      ]
+                                    },
+                                    model: {
+                                      value: _vm.email,
+                                      callback: function($$v) {
+                                        _vm.email = $$v
+                                      },
+                                      expression: "email"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("v-text-field", {
+                                    attrs: {
+                                      label: "password",
+                                      rules: [
+                                        _vm.rules.requerid,
+                                        _vm.rules.espaciosBlanco
+                                      ],
+                                      counter: "",
+                                      type: "password"
+                                    },
+                                    model: {
+                                      value: _vm.password,
+                                      callback: function($$v) {
+                                        _vm.password = $$v
+                                      },
+                                      expression: "password"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("v-text-field", {
+                                    attrs: {
+                                      label: "confirm password",
+                                      rules: [
+                                        _vm.rules.requerid,
+                                        _vm.rules.passwordConfirm,
+                                        _vm.rules.espaciosBlanco
+                                      ],
+                                      counter: "",
+                                      type: "password"
+                                    },
+                                    model: {
+                                      value: _vm.passwordConfirm,
+                                      callback: function($$v) {
+                                        _vm.passwordConfirm = $$v
+                                      },
+                                      expression: "passwordConfirm"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("v-select", {
+                                    attrs: {
+                                      items: _vm.itemsTipoUsuario,
+                                      label: "tipo Usuario",
+                                      rules: [
+                                        _vm.rules.requerid,
+                                        _vm.rules.espaciosBlanco
+                                      ]
+                                    },
+                                    model: {
+                                      value: _vm.tipoUsuario,
+                                      callback: function($$v) {
+                                        _vm.tipoUsuario = $$v
+                                      },
+                                      expression: "tipoUsuario"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
                             ],
                             1
-                          )
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c("v-autocomplete", {
-                        attrs: {
-                          items: _vm.materiasDisponibles,
-                          filled: "",
-                          chips: "",
-                          label: "materias",
-                          multiple: "",
-                          rules: [_vm.rules.requeridArray],
-                          placeholder: "busca materia..."
-                        },
-                        model: {
-                          value: _vm.materiasSeleccionadas,
-                          callback: function($$v) {
-                            _vm.materiasSeleccionadas = $$v
-                          },
-                          expression: "materiasSeleccionadas"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "v-col",
-                        { attrs: { md: "5", "offset-md": "4" } },
-                        [
+                          ),
+                          _vm._v(" "),
+                          _c("v-autocomplete", {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.muestraInputMaterias,
+                                expression: "muestraInputMaterias"
+                              }
+                            ],
+                            attrs: {
+                              items: _vm.materiasDisponibles,
+                              filled: "",
+                              chips: "",
+                              label: "materias",
+                              multiple: "",
+                              rules: [_vm.rules.requeridMaterias],
+                              placeholder: "busca materia..."
+                            },
+                            model: {
+                              value: _vm.materiasSeleccionadas,
+                              callback: function($$v) {
+                                _vm.materiasSeleccionadas = $$v
+                              },
+                              expression: "materiasSeleccionadas"
+                            }
+                          }),
+                          _vm._v(" "),
                           _c(
-                            "v-btn",
-                            { attrs: { outlined: "", type: "submit" } },
-                            [_vm._v("Register")]
+                            "v-row",
+                            { attrs: { justify: "center" } },
+                            [
+                              _c(
+                                "v-col",
+                                { attrs: { md: "4" } },
+                                [
+                                  _c(
+                                    "v-btn",
+                                    { attrs: { outlined: "", type: "submit" } },
+                                    [_vm._v("Register")]
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            1
                           )
                         ],
                         1

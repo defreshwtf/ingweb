@@ -15,6 +15,8 @@ class CreateMateriasTable extends Migration
     {
         Schema::create('materias', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string("nombre");
+            $table->string("descripcion");
             $table->timestamps();
         });
     }
@@ -27,18 +29,5 @@ class CreateMateriasTable extends Migration
     public function down()
     {
         Schema::dropIfExists('materias');
-    }
-
-    public function asesoria()
-    {
-        return $this->hasOne("App\Asesoria");
-    }
-
-    public function profesor()
-    {
-        return $this
-            ->belongsToMany('App\Profesor')
-            ->withTimestamps();
-
     }
 }

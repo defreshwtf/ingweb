@@ -17,9 +17,9 @@ class CreateAlumnosTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
 
-            $table->bigInteger("idUser");
+            $table->bigInteger("idUser")->unsigned();
 
-            $table->foreign("idUser")->references("id")->on("Users");
+            $table->foreign("idUser")->references("id")->on("users");
         });
     }
 
@@ -31,15 +31,5 @@ class CreateAlumnosTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alumnos');
-    }
-
-    public function user()
-    {
-        return $this->hasOne("App\User");
-    }
-
-    public function asesoria()
-    {
-        return $this->hasOne("App\Asesoria");
     }
 }

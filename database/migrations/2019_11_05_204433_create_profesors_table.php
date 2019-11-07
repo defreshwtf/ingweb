@@ -17,9 +17,9 @@ class CreateProfesorsTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
 
-            $table->bigInteger("idUser");
+            $table->bigInteger("idUser")->unsigned();
 
-            $table->foreign("idUser")->references("id")->on("Users");
+            $table->foreign("idUser")->references("id")->on("users");
         });
     }
 
@@ -32,20 +32,4 @@ class CreateProfesorsTable extends Migration
     {
         Schema::dropIfExists('profesors');
     }
-
-    public function user()
-    {
-        return $this->hasOne("App\User");
-    }
-
-    public function materia()
-    {
-        return $this
-            ->belongsToMany('App\Materia')
-            ->withTimestamps();
-    }
-
-    public function asesoria(){
-        return $this->hasOne("App\Asesoria");
-    } 
 }

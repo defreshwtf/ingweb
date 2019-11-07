@@ -18,13 +18,13 @@ class CreateAsesoriasTable extends Migration
             $table->timestamp("fecha_hora");
             $table->timestamps();
 
-            $table->bigInteger("idMateria");
-            $table->bigInteger("idAlumno");
-            $table->bigInteger("idProfesor");
+            $table->bigInteger("idMateria")->unsigned();
+            $table->bigInteger("idAlumno")->unsigned();
+            $table->bigInteger("idProfesor")->unsigned();
 
-            $table->foreign("idMateria")->references("id")->on("Materias");
-            $table->foreign("idAlumno")->references("id")->on("Alumnos");
-            $table->foreign("idProfesor")->references("id")->on("Profesors");
+            $table->foreign("idMateria")->references("id")->on("materias");
+            $table->foreign("idAlumno")->references("id")->on("alumnos");
+            $table->foreign("idProfesor")->references("id")->on("profesors");
         });
     }
 
@@ -36,26 +36,5 @@ class CreateAsesoriasTable extends Migration
     public function down()
     {
         Schema::dropIfExists('asesorias');
-    }
-
-    public function materia()
-    {
-        $this
-            ->belongsToMany('App\Materia')
-            ->withTimestamps();
-    }
-
-    public function profesor()
-    {
-        $this
-            ->belongsToMany('App\Profesor')
-            ->withTimestamps();
-    }
-    
-    public function alumno()
-    {
-        $this
-            ->belongsToMany('App\Alumno')
-            ->withTimestamps();
     }
 }

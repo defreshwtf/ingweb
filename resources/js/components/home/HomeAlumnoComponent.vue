@@ -106,13 +106,13 @@ export default {
             this.$refs.formAgendaAsesoria.validate();
         }
     },
-    beforeMount:{
-        setMaterias(){
-            // axios.get()
-            // .then(response => console.log(response))
-            // .catch(error => console.log(error));
-        },
-    },
+    // beforeMount:{
+    //     setMaterias(){
+    //         axios.get()
+    //         .then(response => console.log(response))
+    //         .catch(error => console.log(error));
+    //     },
+    // },
     watch: {
         materia(){
             // axios.get()

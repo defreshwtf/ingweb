@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Alumno;
 use App\Http\Controllers\Controller;
+use App\Profesor;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -19,7 +21,7 @@ class RegisterController extends Controller
     | validation and creation. By default this controller uses a trait to
     | provide this functionality without requiring any additional code.
     |
-    */
+     */
 
     use RegistersUsers;
 
@@ -64,10 +66,34 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password'])
+            'password' => Hash::make($data['password']),
         ]);
+        $idUser = User::where("email", $data["email"])->value("id");
+
+        if ($data["tipo_usuario"] == "Alumno") {
+
+            //
+            //crea un nuevo usuario de tipo alumno
+            //
+            $user_data = Alumno::create([
+                'idUser' => $idUser,
+            ]);
+        } else {
+
+            //
+            //crea un nuevo usuario de tipo profesor con sus respectivas materias
+            //
+            $user_data = Profesor::create([
+                'idUser' => $idUser,
+            ]);
+            $idProfesor = Profesor::where("idUser", $idUser)->value("id");
+
+            $materias_seleccionadas = $data["materias_seleccionadas"];
+        }
+
+        return $user;
     }
 }
