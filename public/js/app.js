@@ -2194,7 +2194,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["route_register", "route_home"],
+  props: ["route_register", "route_home", "materias"],
   data: function data() {
     var _this = this;
 
@@ -2209,7 +2209,7 @@ __webpack_require__.r(__webpack_exports__);
       passwordConfirm: "",
       tipoUsuario: "",
       materiasSeleccionadas: [],
-      materiasDisponibles: ["Formación Humana y Social", "DHPC", "DHTIC", "Matemáticas Elementales", "Algebra Superior", "Cálculo Diferencial", "Matemáticas Discretas", "Geometría Análitica con Algebra Lineal", "Cálculo Integral", "Probabilidad y Estadística", "Ecuaciones Diferenciales", "HAA", "Redacción", "Metodología de la Programación", "Ensamblador", "Programación I", "Sistemas Operativos I", "Programación II", "Estructuras de Datos", "Graficación", "Innovación y Talento Emprendedor", "Métodos Numéricos", "Programación Concurrente y Paralela", "Circuitos Eléctricos", "Diseño Digital", "Sistemas Operativos II", "Circuitos Electrónicos", "Programación Distribuida", "Sistemas Digitales", "Microprocesadores e Interfaces", "Transmisión y Comunicación de Datos", "Base de Datos", "Modelo de Redes", "Administración de Redes", "Redes Inalámbricas", "Análisis y Diseño de Algoritmos", "Arquitectura de Computadoras", "Sistemas Empotrados", "Ingeniería de Software", "Desarrollo de Aplicaciones Móviles", "Administración de Proyectos", "Proyectos I+D I", "Proyectos I+D II", "Tópicos en Ingeniería", "Arquitectura Avanzada de Computadoras", "Control Digital", "Diseño de Sistemas de Tiempo Real", "Sistemas de Tiempo Real", "Ingeniería Web", "Minería de Datos", "Tratamiento de la Información", "Ingeniería de Software Avanzada", "Introducción a la Robótica", "Aplicaciones Multimedia", "Técnicas de Inteligencia Artificial", "Interacción Humano Computadora", "Procesamiento Digital de Imágenes", "Animación por Computadora", "Simulación", "Investigación de Operaciones", "Aplicaciones Web", "Intercomunicación y Seguridad en Redes", "Cómputo Obicuo", "Introducción a los Compiladores"],
+      materiasDisponibles: [],
       rules: {
         requerid: function requerid(v) {
           return !!v || "requerido";
@@ -2255,6 +2255,13 @@ __webpack_require__.r(__webpack_exports__);
       }
     }
   },
+  mounted: function mounted() {
+    var _this3 = this;
+
+    this.materias.forEach(function (e) {
+      _this3.materiasDisponibles.push(e.nombre);
+    });
+  },
   methods: {
     restableceErroresValidacion: function restableceErroresValidacion() {
       if (this.error_usuarioExistente !== true) {
@@ -2263,7 +2270,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     validate: function validate() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this.$refs.form.validate()) {
         axios.post(this.route_register, {
@@ -2274,14 +2281,14 @@ __webpack_require__.r(__webpack_exports__);
           tipo_usuario: this.tipoUsuario,
           materias_seleccionadas: this.materiasSeleccionadas
         }).then(function (response) {
-          _this3.overlay = !_this3.overlay;
+          _this4.overlay = !_this4.overlay;
         })["catch"](function (error) {
           console.log(error);
 
           if (error.response.data.errors.email != undefined) {
-            _this3.error_usuarioExistente = error.response.data.errors.email[0];
+            _this4.error_usuarioExistente = error.response.data.errors.email[0];
 
-            _this3.$refs.form.validate();
+            _this4.$refs.form.validate();
           }
         });
       }
@@ -2389,12 +2396,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["info_profesores_by_materia", "idAlumno"],
   data: function data() {
     return {
-      materias: ["materia1", "materia2", "materia3"],
-      profesores: ["profesores1", "profesores2", "profesores3"],
-      materia: "",
-      profesor: "",
+      materiasDisponibles: [],
+      materiaSeleccionada: "",
+      profesorSeleccionado: "",
       tema: "",
       rules_AgendaAsesoria: {
         requerid: function requerid(v) {
@@ -2408,21 +2415,24 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     submit: function submit() {
-      this.$refs.formAgendaAsesoria.validate();
+      if (this.$refs.formAgendaAsesoria.validate()) {
+        axios.post("http://ingweb.xgab.com/peticionAsesoria/", {
+          idAlumno: this.idAlumno,
+          nomMateria: this.materiaSeleccionada,
+          nomProfesor: this.profesorSeleccionado
+        }).then(function (response) {})["catch"](function (error) {});
+      }
     }
   },
-  // beforeMount:{
-  //     setMaterias(){
-  //         axios.get()
-  //         .then(response => console.log(response))
-  //         .catch(error => console.log(error));
-  //     },
-  // },
+  mounted: function mounted() {
+    var _this = this;
+
+    Object.keys(this.info_profesores_by_materia).forEach(function (materia) {
+      _this.materiasDisponibles.push(materia);
+    });
+  },
   watch: {
-    materia: function materia() {// axios.get()
-      // .then(response => console.log(response))
-      // .catch(error => console.log(error));
-    }
+    materiaSeleccionada: function materiaSeleccionada() {}
   }
 });
 
@@ -2450,8 +2460,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["app_name", "user_data"],
+  props: ["app_name", "tipo_usuario", "id_tipo_usuario", "info_profesores_by_materia"],
   data: function data() {
     return {};
   },
@@ -38652,14 +38663,16 @@ var render = function() {
                                                       .requerid
                                                   ],
                                                   label: "materia",
-                                                  items: _vm.materias
+                                                  items: _vm.materiasDisponibles
                                                 },
                                                 model: {
-                                                  value: _vm.materia,
+                                                  value:
+                                                    _vm.materiaSeleccionada,
                                                   callback: function($$v) {
-                                                    _vm.materia = $$v
+                                                    _vm.materiaSeleccionada = $$v
                                                   },
-                                                  expression: "materia"
+                                                  expression:
+                                                    "materiaSeleccionada"
                                                 }
                                               }),
                                               _vm._v(" "),
@@ -38670,14 +38683,20 @@ var render = function() {
                                                       .requerid
                                                   ],
                                                   label: "profesor",
-                                                  items: _vm.profesores
+                                                  items:
+                                                    _vm
+                                                      .info_profesores_by_materia[
+                                                      _vm.materiaSeleccionada
+                                                    ]
                                                 },
                                                 model: {
-                                                  value: _vm.profesor,
+                                                  value:
+                                                    _vm.profesorSeleccionado,
                                                   callback: function($$v) {
-                                                    _vm.profesor = $$v
+                                                    _vm.profesorSeleccionado = $$v
                                                   },
-                                                  expression: "profesor"
+                                                  expression:
+                                                    "profesorSeleccionado"
                                                 }
                                               }),
                                               _vm._v(" "),
@@ -38856,9 +38875,13 @@ var render = function() {
         "v-container",
         { staticStyle: { "margin-top": "20vh", "margin-bottom": "20vh" } },
         [
-          _vm.user_data["tipo_usuario"] == "Profesor"
+          _vm.tipo_usuario == "Profesor"
             ? _c("home-profesor-component")
-            : _c("home-alumno-component")
+            : _c("home-alumno-component", {
+                attrs: {
+                  info_profesores_by_materia: _vm.info_profesores_by_materia
+                }
+              })
         ],
         1
       )

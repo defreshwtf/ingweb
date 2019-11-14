@@ -73,7 +73,7 @@
 
 <script>
 export default {
-    props: ["route_register", "route_home"],
+    props: ["route_register", "route_home","materias"],
     data() {
         return {
             overlay: false,
@@ -86,72 +86,7 @@ export default {
             passwordConfirm: "",
             tipoUsuario: "",
             materiasSeleccionadas: [],
-            materiasDisponibles: [
-                "Formación Humana y Social",
-                "DHPC",
-                "DHTIC",
-                "Matemáticas Elementales",
-                "Algebra Superior",
-                "Cálculo Diferencial",
-                "Matemáticas Discretas",
-                "Geometría Análitica con Algebra Lineal",
-                "Cálculo Integral",
-                "Probabilidad y Estadística",
-                "Ecuaciones Diferenciales",
-                "HAA",
-                "Redacción",
-                "Metodología de la Programación",
-                "Ensamblador",
-                "Programación I",
-                "Sistemas Operativos I",
-                "Programación II",
-                "Estructuras de Datos",
-                "Graficación",
-                "Innovación y Talento Emprendedor",
-                "Métodos Numéricos",
-                "Programación Concurrente y Paralela",
-                "Circuitos Eléctricos",
-                "Diseño Digital",
-                "Sistemas Operativos II",
-                "Circuitos Electrónicos",
-                "Programación Distribuida",
-                "Sistemas Digitales",
-                "Microprocesadores e Interfaces",
-                "Transmisión y Comunicación de Datos",
-                "Base de Datos",
-                "Modelo de Redes",
-                "Administración de Redes",
-                "Redes Inalámbricas",
-                "Análisis y Diseño de Algoritmos",
-                "Arquitectura de Computadoras",
-                "Sistemas Empotrados",
-                "Ingeniería de Software",
-                "Desarrollo de Aplicaciones Móviles",
-                "Administración de Proyectos",
-                "Proyectos I+D I",
-                "Proyectos I+D II",
-                "Tópicos en Ingeniería",
-                "Arquitectura Avanzada de Computadoras",
-                "Control Digital",
-                "Diseño de Sistemas de Tiempo Real",
-                "Sistemas de Tiempo Real",
-                "Ingeniería Web",
-                "Minería de Datos",
-                "Tratamiento de la Información",
-                "Ingeniería de Software Avanzada",
-                "Introducción a la Robótica",
-                "Aplicaciones Multimedia",
-                "Técnicas de Inteligencia Artificial",
-                "Interacción Humano Computadora",
-                "Procesamiento Digital de Imágenes",
-                "Animación por Computadora",
-                "Simulación",
-                "Investigación de Operaciones",
-                "Aplicaciones Web",
-                "Intercomunicación y Seguridad en Redes",
-                "Cómputo Obicuo",
-                "Introducción a los Compiladores"
-            ],
+            materiasDisponibles: [],
             rules: {
                 requerid: v => !!v || "requerido",
                 requeridMaterias: v =>
@@ -188,6 +123,11 @@ export default {
                 this.muestraInputMaterias = false;
             }
         }
+    },
+    mounted(){
+        this.materias.forEach(e => {
+            this.materiasDisponibles.push(e.nombre);
+        });
     },
     methods: {
         restableceErroresValidacion() {

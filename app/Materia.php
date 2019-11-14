@@ -6,6 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Materia extends Model
 {
+	/**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'nombre',
+        'descripcion',
+    ];
+
     public function asesorias()
     {
         return $this->hasMany("App\Asesoria");
@@ -13,7 +23,6 @@ class Materia extends Model
 
     public function profesors()
     {
-        return $this->belongsToMany('App\Profesor', 'materia_profesor');
-
+        return $this->belongsToMany('App\Profesor', 'materia_profesor',"idMateria","idProfesor");
     }
 }

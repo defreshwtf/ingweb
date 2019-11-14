@@ -2,10 +2,11 @@
     <div>
         <v-container style="margin-top: 20vh; margin-bottom: 20vh;">
             <home-profesor-component
-                v-if="user_data['tipo_usuario'] == 'Profesor'"
+                v-if="tipo_usuario == 'Profesor'"
             ></home-profesor-component>
             <home-alumno-component
                 v-else
+                :info_profesores_by_materia="info_profesores_by_materia"
             ></home-alumno-component>
         </v-container>
     </div>
@@ -13,7 +14,7 @@
 
 <script>
 export default {
-    props: ["app_name", "user_data"],
+    props: ["app_name", "tipo_usuario", "id_tipo_usuario","info_profesores_by_materia"],
     data() {
         return {};
     },

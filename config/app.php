@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'America/Mexico_City'),
 
     /*
     |--------------------------------------------------------------------------
@@ -189,6 +189,11 @@ return [
     */
 
     'aliases' => [
+
+        "Materia" => App\Materia::class,
+        "Profesor" => App\Profesor::class,
+        "Alumno" => App\Alumno::class,
+        "Asesoria" => App\Asesoria::class,
 
         'App' => Illuminate\Support\Facades\App::class,
         'Arr' => Illuminate\Support\Arr::class,

@@ -4,11 +4,12 @@
 <register-component
     :route_register="{{json_encode(route('register'))}}"
     :route_home="{{json_encode(route("home"))}}"
+    :materias="{{json_encode(Materia::all())}}"
 >
 </register-component>
 
-{{-- 
-<div class="container">
+
+{{-- <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -67,6 +68,23 @@
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label for="tipo_usuario" class="col-md-4 col-form-label text-md-right">{{ __('tipo usuario') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="tipo_usuario" class="form-control" name="tipo_usuario" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="materias_seleccionadas" class="col-md-4 col-form-label text-md-right">{{ __('materias seleccionadas') }}</label>
+
+                            <div class="col-md-6">
+                                <select id="materias_seleccionadas" class="form-control" name="materias_seleccionadas">
+                                    <option value="Materia1" selected="">Materia1</option>
+                                    <option value="Materia2">Materia2</option>
+                                </select>
+                            </div>
+                        </div>
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
@@ -80,7 +98,7 @@
             </div>
         </div>
     </div>
-</div>
- --}}
+</div> --}}
+
 
 @endsection

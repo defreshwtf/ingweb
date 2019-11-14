@@ -15,7 +15,8 @@ class CreateAsesoriasTable extends Migration
     {
         Schema::create('asesorias', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamp("fecha_hora");
+            $table->timestamp("fecha_hora")->nullable();
+            $table->string('status')->default("pendiente");
             $table->timestamps();
 
             $table->bigInteger("idMateria")->unsigned();

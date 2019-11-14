@@ -18,14 +18,14 @@
                                                 <v-autocomplete
                                                     :rules="[rules_AgendaAsesoria.requerid]"
                                                     label="materia"
-                                                    :items="materias"
-                                                    v-model="materia"
+                                                    :items="materiasDisponibles"
+                                                    v-model="materiaSeleccionada"
                                                 ></v-autocomplete>
                                                 <v-autocomplete
                                                     :rules="[rules_AgendaAsesoria.requerid]"
                                                     label="profesor"
-                                                    :items="profesores"
-                                                    v-model="profesor"
+                                                    :items="info_profesores_by_materia[materiaSeleccionada]"
+                                                    v-model="profesorSeleccionado"
                                                 ></v-autocomplete>
                                                 <v-text-field
                                                     :rules="[rules_AgendaAsesoria.requerid, rules_AgendaAsesoria.maxCaracteres]"
@@ -88,12 +88,12 @@
 
 <script>
 export default {
+    props:["info_profesores_by_materia", "idAlumno"],
     data() {
         return {
-            materias: ["materia1", "materia2", "materia3"],
-            profesores: ["profesores1", "profesores2", "profesores3"],
-            materia:"",
-            profesor:"",
+            materiasDisponibles: [],
+            materiaSeleccionada:"",
+            profesorSeleccionado:"",
             tema:"",
             rules_AgendaAsesoria: {
                 requerid: v => !!v || "campo requerido",
@@ -103,21 +103,29 @@ export default {
     },
     methods: {
         submit() {
-            this.$refs.formAgendaAsesoria.validate();
+            if(this.$refs.formAgendaAsesoria.validate()){
+                axios
+                .post("http://ingweb.xgab.com/peticionAsesoria/",{
+                    idAlumno: this.idAlumno,
+                    nomMateria: this.materiaSeleccionada,
+                    nomProfesor: this.profesorSeleccionado,
+                })
+                .then(response => {
+
+                })
+                .catch( error => {
+
+                });
+            }
         }
     },
-    // beforeMount:{
-    //     setMaterias(){
-    //         axios.get()
-    //         .then(response => console.log(response))
-    //         .catch(error => console.log(error));
-    //     },
-    // },
+    mounted(){
+        Object.keys(this.info_profesores_by_materia).forEach(materia =>{
+            this.materiasDisponibles.push(materia);
+        });
+    },
     watch: {
-        materia(){
-            // axios.get()
-            // .then(response => console.log(response))
-            // .catch(error => console.log(error));
+        materiaSeleccionada(){
         }
     },
 };

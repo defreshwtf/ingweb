@@ -16,11 +16,11 @@ class Alumno extends Model
     ];
     public function user()
     {
-        return $this->hasOne("App\User");
+        return $this->belongsTo("App\User","idUser");
     }
 
     public function asesorias()
     {
-        return $this->belongsToMany("App\Asesoria", "alumno_asesoria");
+        return $this->belongsToMany("App\Asesoria", "alumno_asesoria","idAlumno","idAsesoria");
     }
 }

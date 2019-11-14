@@ -6,6 +6,7 @@ use App\Alumno;
 use App\Http\Controllers\Controller;
 use App\Profesor;
 use App\User;
+use App\Materia;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -71,14 +72,14 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
-        $idUser = User::where("email", $data["email"])->value("id");
+        $idUser = $user->value("id");
 
         if ($data["tipo_usuario"] == "Alumno") {
 
             //
             //crea un nuevo usuario de tipo alumno
             //
-            $user_data = Alumno::create([
+            Alumno::create([
                 'idUser' => $idUser,
             ]);
         } else {
@@ -86,17 +87,16 @@ class RegisterController extends Controller
             //
             //crea un nuevo usuario de tipo profesor con sus respectivas materias
             //
-            $user_data = Profesor::create([
+            $profesor = Profesor::create([
                 'idUser' => $idUser,
             ]);
-            $idProfesor = Profesor::where("idUser", $idUser)->value("id");
 
             $materias_seleccionadas = $data["materias_seleccionadas"];
 
-            print_r($materias_seleccionadas);
-
-            // foreach ($materias_seleccionadas as $key => $value) {
-            // }
+            foreach ($materias_seleccionadas as $key => $value) {
+                $idMateria = Materia::where("nombre", $value)->value("id");
+                $profesor->materias()->attach($idMateria);
+            }
         }
 
         return $user;

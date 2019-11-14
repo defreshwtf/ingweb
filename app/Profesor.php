@@ -17,12 +17,12 @@ class Profesor extends Model
 
     public function user()
     {
-        return $this->hasOne("App\User");
+        return $this->belongsTo("App\User","idUser");
     }
 
     public function materias()
     {
-        return $this->belongsToMany('App\Materia', "materia_profesor");
+        return $this->belongsToMany('App\Materia', "materia_profesor","idProfesor","idMateria");
     }
 
     public function asesoria(){
