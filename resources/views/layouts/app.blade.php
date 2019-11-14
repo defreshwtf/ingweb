@@ -19,6 +19,9 @@
     
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <!--material icons-->
+    <link rel="stylesheet" type="text/css" href="css/material-icons/material-design-icons.css">
 </head>
 <body>
     <v-app id="app">

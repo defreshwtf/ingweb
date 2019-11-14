@@ -5,7 +5,7 @@
                 <v-row>
                     <v-col :cols="12">
                         <v-card>
-                            <v-card-title>Administrar Asesorias Alumno</v-card-title>
+                            <v-card-title>idAlumno: {{id_alumno}}</v-card-title>
                             <v-card-text>
                                 <v-container>
                                     <v-form
@@ -38,7 +38,7 @@
                                         <v-row class="d-flex justify-space-around">
                                             <v-btn type="submit" outlined color="green">agendar</v-btn>
                                             <v-btn
-                                                @click="$refs.formAgendaAsesoria.resetValidation()"
+                                                @click="$refs.formAgendaAsesoria.reset()"
                                                 outlined
                                                 color="yellow"
                                             >reset</v-btn>
@@ -88,7 +88,7 @@
 
 <script>
 export default {
-    props:["info_profesores_by_materia", "idAlumno"],
+    props:["info_profesores_by_materia", "id_alumno"],
     data() {
         return {
             materiasDisponibles: [],
@@ -105,16 +105,16 @@ export default {
         submit() {
             if(this.$refs.formAgendaAsesoria.validate()){
                 axios
-                .post("http://ingweb.xgab.com/peticionAsesoria/",{
-                    idAlumno: this.idAlumno,
+                .post("http://ingweb.xgab.com/peticionAsesoria",{
+                    idAlumno: this.id_alumno,
                     nomMateria: this.materiaSeleccionada,
                     nomProfesor: this.profesorSeleccionado,
                 })
-                .then(response => {
-
+                .then( response => {
+                    console.log(response);
                 })
                 .catch( error => {
-
+                    console.log(error.response);
                 });
             }
         }

@@ -90,13 +90,6 @@ export default {
         };
     },
     watch: {
-        overlay(val) {
-            val &&
-                setTimeout(() => {
-                    this.overlay = false;
-                    window.location.href = this.route_home;
-                }, 2000);
-        }
     },
     methods: {
         verifica_errores_autenticacion() {
@@ -107,6 +100,7 @@ export default {
         },
         validate() {
             if (this.$refs.form.validate()) {
+                this.overlay = true;
                 axios
                     .post(this.route_login, {
                         email: this.email,
@@ -114,12 +108,14 @@ export default {
                         remember: this.remember
                     })
                     .then(response => {
-                        console.log(response);
-                        this.overlay = !this.overlay;
+                        setTimeout(() => {
+                            this.overlay = false;
+                            window.location.href = this.route_home;
+                        }, 1000);
                     })
                     .catch(error => {
-                        this.auth_error =
-                            error.response.data.errors["email"][0];
+                        this.auth_error = error.response.data.errors["email"][0];
+                        this.overlay = false;
                         this.$refs.form.validate();
                     });
             }

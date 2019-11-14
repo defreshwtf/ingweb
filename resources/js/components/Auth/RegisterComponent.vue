@@ -109,13 +109,6 @@ export default {
         };
     },
     watch: {
-        overlay(val) {
-            val &&
-                setTimeout(() => {
-                    this.overlay = false;
-                    window.location.href = this.route_home;
-                }, 2000);
-        },
         tipoUsuario() {
             if (this.tipoUsuario == "Profesor") {
                 this.muestraInputMaterias = true;
@@ -138,6 +131,7 @@ export default {
         },
         validate() {
             if (this.$refs.form.validate()) {
+                this.overlay = true;
                 axios
                     .post(this.route_register, {
                         name: this.name,
@@ -148,14 +142,17 @@ export default {
                         materias_seleccionadas: this.materiasSeleccionadas
                     })
                     .then(response => {
-                        this.overlay = !this.overlay;
+                        setTimeout(() => {
+                            this.overlay = false;
+                            window.location.href = this.route_home;
+                        }, 1000);
                     })
                     .catch(error => {
                         console.log(error);
+                        this.overlay = false;
                         if (error.response.data.errors.email != undefined) {
-                            this.error_usuarioExistente =
-                                error.response.data.errors.email[0];
-                                this.$refs.form.validate();
+                            this.error_usuarioExistente = error.response.data.errors.email[0];
+                            this.$refs.form.validate();
                         }
                     });
             }

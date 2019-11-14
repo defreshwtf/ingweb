@@ -2071,16 +2071,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
-  watch: {
-    overlay: function overlay(val) {
-      var _this2 = this;
-
-      val && setTimeout(function () {
-        _this2.overlay = false;
-        window.location.href = _this2.route_home;
-      }, 2000);
-    }
-  },
+  watch: {},
   methods: {
     verifica_errores_autenticacion: function verifica_errores_autenticacion() {
       if (this.auth_error !== true) {
@@ -2089,20 +2080,24 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     validate: function validate() {
-      var _this3 = this;
+      var _this2 = this;
 
       if (this.$refs.form.validate()) {
+        this.overlay = true;
         axios.post(this.route_login, {
           email: this.email,
           password: this.password,
           remember: this.remember
         }).then(function (response) {
-          console.log(response);
-          _this3.overlay = !_this3.overlay;
+          setTimeout(function () {
+            _this2.overlay = false;
+            window.location.href = _this2.route_home;
+          }, 1000);
         })["catch"](function (error) {
-          _this3.auth_error = error.response.data.errors["email"][0];
+          _this2.auth_error = error.response.data.errors["email"][0];
+          _this2.overlay = false;
 
-          _this3.$refs.form.validate();
+          _this2.$refs.form.validate();
         });
       }
     }
@@ -2239,14 +2234,6 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   watch: {
-    overlay: function overlay(val) {
-      var _this2 = this;
-
-      val && setTimeout(function () {
-        _this2.overlay = false;
-        window.location.href = _this2.route_home;
-      }, 2000);
-    },
     tipoUsuario: function tipoUsuario() {
       if (this.tipoUsuario == "Profesor") {
         this.muestraInputMaterias = true;
@@ -2256,10 +2243,10 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
-    var _this3 = this;
+    var _this2 = this;
 
     this.materias.forEach(function (e) {
-      _this3.materiasDisponibles.push(e.nombre);
+      _this2.materiasDisponibles.push(e.nombre);
     });
   },
   methods: {
@@ -2270,9 +2257,10 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     validate: function validate() {
-      var _this4 = this;
+      var _this3 = this;
 
       if (this.$refs.form.validate()) {
+        this.overlay = true;
         axios.post(this.route_register, {
           name: this.name,
           email: this.email,
@@ -2281,14 +2269,18 @@ __webpack_require__.r(__webpack_exports__);
           tipo_usuario: this.tipoUsuario,
           materias_seleccionadas: this.materiasSeleccionadas
         }).then(function (response) {
-          _this4.overlay = !_this4.overlay;
+          setTimeout(function () {
+            _this3.overlay = false;
+            window.location.href = _this3.route_home;
+          }, 1000);
         })["catch"](function (error) {
           console.log(error);
+          _this3.overlay = false;
 
           if (error.response.data.errors.email != undefined) {
-            _this4.error_usuarioExistente = error.response.data.errors.email[0];
+            _this3.error_usuarioExistente = error.response.data.errors.email[0];
 
-            _this4.$refs.form.validate();
+            _this3.$refs.form.validate();
           }
         });
       }
@@ -2396,7 +2388,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["info_profesores_by_materia", "idAlumno"],
+  props: ["info_profesores_by_materia", "id_alumno"],
   data: function data() {
     return {
       materiasDisponibles: [],
@@ -2416,11 +2408,15 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     submit: function submit() {
       if (this.$refs.formAgendaAsesoria.validate()) {
-        axios.post("http://ingweb.xgab.com/peticionAsesoria/", {
-          idAlumno: this.idAlumno,
+        axios.post("http://ingweb.xgab.com/peticionAsesoria", {
+          idAlumno: this.id_alumno,
           nomMateria: this.materiaSeleccionada,
           nomProfesor: this.profesorSeleccionado
-        }).then(function (response) {})["catch"](function (error) {});
+        }).then(function (response) {
+          console.log(response);
+        })["catch"](function (error) {
+          console.log(error.response);
+        });
       }
     }
   },
@@ -2447,6 +2443,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
 //
 //
 //
@@ -2538,7 +2536,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["id_profesor"]
+});
 
 /***/ }),
 
@@ -38621,7 +38621,7 @@ var render = function() {
                         "v-card",
                         [
                           _c("v-card-title", [
-                            _vm._v("Administrar Asesorias Alumno")
+                            _vm._v("idAlumno: " + _vm._s(_vm.id_alumno))
                           ]),
                           _vm._v(" "),
                           _c(
@@ -38754,7 +38754,7 @@ var render = function() {
                                               },
                                               on: {
                                                 click: function($event) {
-                                                  return _vm.$refs.formAgendaAsesoria.resetValidation()
+                                                  return _vm.$refs.formAgendaAsesoria.reset()
                                                 }
                                               }
                                             },
@@ -38876,10 +38876,13 @@ var render = function() {
         { staticStyle: { "margin-top": "20vh", "margin-bottom": "20vh" } },
         [
           _vm.tipo_usuario == "Profesor"
-            ? _c("home-profesor-component")
+            ? _c("home-profesor-component", {
+                attrs: { id_profesor: _vm.id_tipo_usuario }
+              })
             : _c("home-alumno-component", {
                 attrs: {
-                  info_profesores_by_materia: _vm.info_profesores_by_materia
+                  info_profesores_by_materia: _vm.info_profesores_by_materia,
+                  id_alumno: _vm.id_tipo_usuario
                 }
               })
         ],

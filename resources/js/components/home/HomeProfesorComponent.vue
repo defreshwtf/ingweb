@@ -57,6 +57,6 @@
 
 <script>
 export default {
-    
+    props:["id_profesor"],
 }
 </script>

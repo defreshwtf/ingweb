@@ -26,6 +26,6 @@ class Profesor extends Model
     }
 
     public function asesoria(){
-        return $this->hasMany("App\Asesoria");
+        return $this->hasMany("App\Asesoria", "idProfesor");
     } 
 }

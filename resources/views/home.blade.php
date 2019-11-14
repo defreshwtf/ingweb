@@ -28,7 +28,6 @@
 		} else{
 			$id_tipo_usuario = $profesor->value("id");
 		}
-
 	?>
     :app_name="{{json_encode(config('app.name','No Name :v'))}}"
     :tipo_usuario="{{json_encode($tipo_usuario)}}"

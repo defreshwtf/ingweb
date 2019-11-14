@@ -18,7 +18,7 @@ class Materia extends Model
 
     public function asesorias()
     {
-        return $this->hasMany("App\Asesoria");
+        return $this->hasMany("App\Asesoria", "idMateria");
     }
 
     public function profesors()
