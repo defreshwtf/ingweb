@@ -9,16 +9,16 @@ class Asesoria extends Model
     //
     public function materia()
     {
-        $this->hasOne('App\Materia');
+        return $this->hasOne('App\Materia');
     }
 
     public function profesor()
     {
-        $this->hasOne('App\Profesor');
+        return $this->hasOne('App\Profesor');
     }
     
     public function alumnos()
     {
-        $this->belongsToMany('App\Alumno', "alumno_asesoria");
+        return $this->belongsToMany('App\Alumno', "alumno_asesoria");
     }
 }
