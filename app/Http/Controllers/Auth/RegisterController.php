@@ -92,6 +92,11 @@ class RegisterController extends Controller
             $idProfesor = Profesor::where("idUser", $idUser)->value("id");
 
             $materias_seleccionadas = $data["materias_seleccionadas"];
+
+            print_r($materias_seleccionadas);
+
+            // foreach ($materias_seleccionadas as $key => $value) {
+            // }
         }
 
         return $user;

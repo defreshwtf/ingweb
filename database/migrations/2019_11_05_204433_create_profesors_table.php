@@ -18,7 +18,6 @@ class CreateProfesorsTable extends Migration
             $table->timestamps();
 
             $table->bigInteger("idUser")->unsigned();
-
             $table->foreign("idUser")->references("id")->on("users");
         });
     }

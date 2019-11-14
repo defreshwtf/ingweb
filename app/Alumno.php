@@ -16,11 +16,11 @@ class Alumno extends Model
     ];
     public function user()
     {
-        return $this->hasOne("App\User")->withTimestamps();
+        return $this->hasOne("App\User");
     }
 
-    public function asesoria()
+    public function asesorias()
     {
-        return $this->hasOne("App\Asesoria")->withTimestamps();
+        return $this->belongsToMany("App\Asesoria", "alumno_asesoria");
     }
 }

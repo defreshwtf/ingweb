@@ -6,16 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Materia extends Model
 {
-    public function asesoria()
+    public function asesorias()
     {
-        return $this->hasOne("App\Asesoria")->withTimestamps();
+        return $this->hasMany("App\Asesoria");
     }
 
-    public function profesor()
+    public function profesors()
     {
-        return $this
-            ->belongsToMany('App\Profesor', 'materia_profesor')
-            ->withTimestamps();
+        return $this->belongsToMany('App\Profesor', 'materia_profesor');
 
     }
 }

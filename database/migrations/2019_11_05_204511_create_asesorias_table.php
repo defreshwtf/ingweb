@@ -19,11 +19,9 @@ class CreateAsesoriasTable extends Migration
             $table->timestamps();
 
             $table->bigInteger("idMateria")->unsigned();
-            $table->bigInteger("idAlumno")->unsigned();
-            $table->bigInteger("idProfesor")->unsigned();
-
             $table->foreign("idMateria")->references("id")->on("materias");
-            $table->foreign("idAlumno")->references("id")->on("alumnos");
+
+            $table->bigInteger("idProfesor")->unsigned();
             $table->foreign("idProfesor")->references("id")->on("profesors");
         });
     }

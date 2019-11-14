@@ -17,17 +17,15 @@ class Profesor extends Model
 
     public function user()
     {
-        return $this->hasOne("App\User")->withTimestamps();
+        return $this->hasOne("App\User");
     }
 
-    public function materia()
+    public function materias()
     {
-        return $this
-            ->belongsToMany('App\Materia')
-            ->withTimestamps();
+        return $this->belongsToMany('App\Materia', "materia_profesor");
     }
 
     public function asesoria(){
-        return $this->hasOne("App\Asesoria")->withTimestamps();
+        return $this->hasMany("App\Asesoria");
     } 
 }
