@@ -12,26 +12,13 @@ class Asesoria extends Model
      * @var array
      */
     protected $fillable = [
-        'idMateria',
-        'idProfesor',
         'fecha_hora',
         "lugar",
-        "estado",
         "tema",
     ];
     
-    public function materia()
+    public function peticions()
     {
-        return $this->belongsTo('App\Materia',"idMateria");
-    }
-
-    public function profesor()
-    {
-        return $this->belongsTo('App\Profesor',"idProfesor");
-    }
-    
-    public function alumnos()
-    {
-        return $this->belongsToMany('App\Alumno', "alumno_asesoria","idAsesoria","idAlumno")->withPivot('tema');
+        return $this->hasMany('App\Peticion', "idAsesoria");
     }
 }

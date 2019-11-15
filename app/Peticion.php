@@ -33,4 +33,9 @@ class Peticion extends Model
     {
         return $this->belongsTo('App\Materia',"idMateria");
     }
+
+    public function asesoria()
+    {
+        return $this->belongsTo('App\Asesoria', "idAsesoria");
+    }
 }

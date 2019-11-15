@@ -15,18 +15,13 @@ class Materia extends Model
         'nombre',
         'descripcion',
     ];
-
-    public function asesorias()
-    {
-        return $this->hasMany("App\Asesoria", "idMateria");
+    
+    public function peticions(){
+        return $this->hasMany("App\Peticion", "idMateria");
     }
 
     public function profesors()
     {
-        return $this->belongsToMany('App\Profesor', 'materia_profesor',"idMateria","idProfesor");
-    }
-
-    public function peticions(){
-        return $this->hasMany("App\Peticion", "idMateria");
+        return $this->belongsToMany('App\Profesor', "materia_profesor","idMateria","idProfesor");
     }
 }

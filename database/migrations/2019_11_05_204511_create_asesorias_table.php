@@ -15,16 +15,10 @@ class CreateAsesoriasTable extends Migration
     {
         Schema::create('asesorias', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamp("fecha_hora")->nullable();
-            $table->string("lugar")->default("-sin asignar-");
+            $table->timestamp("fecha_hora");
+            $table->string("lugar");
             $table->string("tema");
             $table->timestamps();
-
-            $table->bigInteger("idMateria")->unsigned();
-            $table->foreign("idMateria")->references("id")->on("materias");
-
-            $table->bigInteger("idProfesor")->unsigned();
-            $table->foreign("idProfesor")->references("id")->on("profesors");
         });
 
         DB::update("ALTER TABLE asesorias AUTO_INCREMENT = 20191121;");

@@ -27,6 +27,9 @@ class CreatePeticionsTable extends Migration
 
             $table->bigInteger("idMateria")->unsigned();
             $table->foreign("idMateria")->references("id")->on("materias");
+
+            $table->bigInteger("idAsesoria")->nullable()->unsigned();
+            $table->foreign("idAsesoria")->references("id")->on("asesorias");
         });
 
         DB::update("ALTER TABLE peticions AUTO_INCREMENT = 20191121;");
