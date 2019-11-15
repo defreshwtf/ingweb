@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Auth;
 
 use App\Materia;
 use App\Profesor;
-use App\Alumno;
 use App\User;
-use App\Asesoria;
+use App\Peticion;
+
+use Illuminate\Http\Request;
 
 class PeticionAsesoriaController extends Controller
 {
@@ -19,7 +20,32 @@ class PeticionAsesoriaController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user()->profesor;
+        
+        if(is_null($user)){
+            $user = Auth::user()->alumno;
+            // $peticions = Peticion::where("idAlumno",$user->id)->get();
+            $peticions = $user->peticions;
+            $info = [];
+            foreach($peticions as $peticion){
+                $infoTemp = [];
+                $infoTemp["idPeticion"] = $peticion->id;
+                // 
+                // corregir
+                // 
+                // $infoTemp["materia"] = Materia::where("idMateria", $peticion->idMateria)->first();
+                $infoTemp["materia"] = $peticion->materia->nombre;
+                $infoTemp["profesor"] = $peticion->profesor->user->name;
+                $infoTemp["estado"] = $peticion->estado;
+                $infoTemp["tema"] = $peticion->tema;
+                array_push($info, $infoTemp);
+            }
+        } else {
+            // $peticions = Peticion::where("idProfesor",$user->id)->get();
+            $info = [];
+        }
+
+        return response()->json($info);
     }
 
     /**
@@ -38,40 +64,46 @@ class PeticionAsesoriaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
+    {
         $camposFaltantes = [];
         $error = false;
-        if( !$request->has('idAlumno')){
+        if (!$request->has('idAlumno')) {
             array_push($camposFaltantes, "idAlumno");
             $error = true;
         }
-        if(!$request->has('nomMateria')){
+        if (!$request->has('nomMateria')) {
             array_push($camposFaltantes, "nomMateria");
             $error = true;
         }
-        if(!$request->has('nomProfesor')){
+        if (!$request->has('nomProfesor')) {
             array_push($camposFaltantes, "nomProfesor");
             $error = true;
         }
-        if($error){
+        if ($error) {
             return response()->json(["error" => "campos faltantes", "campos" => $camposFaltantes], 500);
         }
 
-        $idAlumno = $request->idAlumno;
+        
         $nomMateria = $request->nomMateria;
         $nomProfesor = $request->nomProfesor;
-
-        $idMateria = Materia::where("nombre", $nomMateria)->value("id");
-        $idProfesor = User::where("name", $nomProfesor)->first()->profesor()->value("id");
-
-        $asesoria = Asesoria::create([
-            "idMateria" => $idMateria,
-            "idProfesor" => $idProfesor,
+        $tema = $request->tema;
+        
+        $materia = Materia::where("nombre", $nomMateria)->first();
+        $profesor = User::where("name", $nomProfesor)->first()->profesor;
+        $alumno = Auth::user()->alumno;
+        
+        $peticion = Peticion::create([
+            "tema" => $tema,
+            "idMateria" => $materia->id,
+            "idProfesor" => $profesor->id,
+            "idAlumno" => $alumno->id,
         ]);
+        $peticion->materia()->associate($materia);
+        $peticion->profesor()->associate($profesor);
+        $peticion->alumno()->associate($alumno);
 
-        $asesoria->alumnos()->attach($idAlumno);
-
-        return response()->json(["sucess" => true],200);
+        // return response()->json(["sucess" => true, "idPeticion" => $peticion->id, "estado" => "pendiente"], 200);
+        return response()->json($peticion->materia, 200);
     }
 
     /**

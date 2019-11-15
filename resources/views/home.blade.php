@@ -18,15 +18,14 @@
 
 		$tipo_usuario = "Profesor";
 		$id_tipo_usuario = "0";
-		$idUser = Auth::id();
 
-		$profesor = Profesor::where("idUser", $idUser);
-		if($profesor->count() == 0){
-
+		$profesor = Auth::user()->profesor;
+		if(is_null($profesor)){
+        
 			$tipo_usuario = "Alumno";
-			$id_tipo_usuario = Alumno::where("idUser", $idUser)->value("id");
+			$id_tipo_usuario = Auth::user()->alumno->id;
 		} else{
-			$id_tipo_usuario = $profesor->value("id");
+			$id_tipo_usuario = $profesor->id;
 		}
 	?>
     :app_name="{{json_encode(config('app.name','No Name :v'))}}"

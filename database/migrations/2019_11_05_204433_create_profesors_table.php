@@ -20,6 +20,8 @@ class CreateProfesorsTable extends Migration
             $table->bigInteger("idUser")->unsigned();
             $table->foreign("idUser")->references("id")->on("users");
         });
+
+        DB::update("ALTER TABLE profesors AUTO_INCREMENT = 21122019;");
     }
 
     /**

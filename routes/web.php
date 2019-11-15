@@ -19,6 +19,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('peticionAsesoria', 'PeticionAsesoriaController')->only([
-    'store'
-]);;
+Route::resource('peticionAsesoria', 'PeticionAsesoriaController')
+->only([
+    'store',
+    "index",
+]);

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAsesoriasTable extends Migration
+class CreatePeticionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,24 @@ class CreateAsesoriasTable extends Migration
      */
     public function up()
     {
-        Schema::create('asesorias', function (Blueprint $table) {
+        Schema::create('peticions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamp("fecha_hora")->nullable();
-            $table->string("lugar")->default("-sin asignar-");
+            $table->string("estado")->default("pendiente");
             $table->string("tema");
             $table->timestamps();
 
-            $table->bigInteger("idMateria")->unsigned();
-            $table->foreign("idMateria")->references("id")->on("materias");
+            $table->bigInteger("idAlumno")->unsigned();
+            $table->foreign("idAlumno")->references("id")->on("alumnos");
 
             $table->bigInteger("idProfesor")->unsigned();
             $table->foreign("idProfesor")->references("id")->on("profesors");
+
+            $table->bigInteger("idMateria")->unsigned();
+            $table->foreign("idMateria")->references("id")->on("materias");
         });
 
-        DB::update("ALTER TABLE asesorias AUTO_INCREMENT = 21122019;");
+        DB::update("ALTER TABLE peticions AUTO_INCREMENT = 21122019;");
+
     }
 
     /**
@@ -37,6 +40,6 @@ class CreateAsesoriasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('asesorias');
+        Schema::dropIfExists('peticions');
     }
 }

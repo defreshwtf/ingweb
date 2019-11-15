@@ -2387,10 +2387,81 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["info_profesores_by_materia", "id_alumno"],
   data: function data() {
     return {
+      dialog: false,
+      headers: [{
+        text: "idPeticion",
+        align: "left",
+        sortable: false,
+        value: "idPeticion"
+      }, {
+        text: "Materia",
+        value: "materia"
+      }, {
+        text: "Profesor",
+        value: "profesor"
+      }, {
+        text: "Estado",
+        value: "estado"
+      }, {
+        text: "Tema Propuesto",
+        value: "tema"
+      }, {
+        text: "Acciones",
+        value: "action",
+        sortable: false
+      }],
+      peticionesAsesorias: [],
       materiasDisponibles: [],
       materiaSeleccionada: "",
       profesorSeleccionado: "",
@@ -2407,28 +2478,78 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     submit: function submit() {
+      var _this = this;
+
       if (this.$refs.formAgendaAsesoria.validate()) {
         axios.post("http://ingweb.xgab.com/peticionAsesoria", {
           idAlumno: this.id_alumno,
           nomMateria: this.materiaSeleccionada,
-          nomProfesor: this.profesorSeleccionado
+          nomProfesor: this.profesorSeleccionado,
+          tema: this.tema
         }).then(function (response) {
+          _this.peticionesAsesorias.push({
+            idPeticion: response.data.idPeticion,
+            materia: _this.materiaSeleccionada,
+            profesor: _this.profesorSeleccionado,
+            estado: "pendiente",
+            temaPropuesto: _this.tema
+          });
+
           console.log(response);
+          _this.materiaSeleccionada = "";
+          _this.profesorSeleccionado = "";
+          _this.tema = "";
+
+          _this.$refs.formAgendaAsesoria.reset();
+
+          _this.dialog = false;
         })["catch"](function (error) {
           console.log(error.response);
         });
       }
+    },
+    getColorEstado: function getColorEstado(estado) {
+      if (estado === "pendiente") {
+        return "yellow";
+      } else if (estado === "aceptado") {
+        return "green";
+      }
+
+      return "red";
+    },
+    getInfoPeticiones: function getInfoPeticiones() {
+      var _this2 = this;
+
+      axios.get("http://ingweb.xgab.com/peticionAsesoria").then(function (response) {
+        console.log(response.data);
+        response.data.forEach(function (e) {
+          _this2.peticionesAsesorias.push(e);
+        });
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    deletePeticion: function deletePeticion(item) {//
+      // corregir
+      //
+      // const index = this.peticionesAsesorias.indexOf(item);
+      // this.peticionesAsesorias.splice(index, 1);
+    },
+    cancelPeticion: function cancelPeticion() {
+      this.dialog = false;
+      this.$refs.formAgendaAsesoria.reset();
     }
   },
   mounted: function mounted() {
-    var _this = this;
+    var _this3 = this;
 
     Object.keys(this.info_profesores_by_materia).forEach(function (materia) {
-      _this.materiasDisponibles.push(materia);
+      _this3.materiasDisponibles.push(materia);
     });
   },
-  watch: {
-    materiaSeleccionada: function materiaSeleccionada() {}
+  watch: {},
+  created: function created() {
+    this.getInfoPeticiones();
   }
 });
 
@@ -38608,197 +38729,20 @@ var render = function() {
         [
           _c(
             "v-col",
-            { attrs: { cols: 8 } },
+            { attrs: { cols: 12 } },
             [
               _c(
-                "v-row",
+                "v-card",
                 [
-                  _c(
-                    "v-col",
-                    { attrs: { cols: 12 } },
-                    [
-                      _c(
-                        "v-card",
-                        [
-                          _c("v-card-title", [
-                            _vm._v("idAlumno: " + _vm._s(_vm.id_alumno))
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "v-card-text",
-                            [
-                              _c(
-                                "v-container",
-                                [
-                                  _c(
-                                    "v-form",
-                                    {
-                                      ref: "formAgendaAsesoria",
-                                      attrs: { action: "" },
-                                      on: {
-                                        submit: function($event) {
-                                          $event.preventDefault()
-                                          return _vm.submit($event)
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _c(
-                                        "v-row",
-                                        {
-                                          attrs: {
-                                            align: "center",
-                                            justify: "center"
-                                          }
-                                        },
-                                        [
-                                          _c(
-                                            "v-col",
-                                            { attrs: { cols: 8 } },
-                                            [
-                                              _c("v-autocomplete", {
-                                                attrs: {
-                                                  rules: [
-                                                    _vm.rules_AgendaAsesoria
-                                                      .requerid
-                                                  ],
-                                                  label: "materia",
-                                                  items: _vm.materiasDisponibles
-                                                },
-                                                model: {
-                                                  value:
-                                                    _vm.materiaSeleccionada,
-                                                  callback: function($$v) {
-                                                    _vm.materiaSeleccionada = $$v
-                                                  },
-                                                  expression:
-                                                    "materiaSeleccionada"
-                                                }
-                                              }),
-                                              _vm._v(" "),
-                                              _c("v-autocomplete", {
-                                                attrs: {
-                                                  rules: [
-                                                    _vm.rules_AgendaAsesoria
-                                                      .requerid
-                                                  ],
-                                                  label: "profesor",
-                                                  items:
-                                                    _vm
-                                                      .info_profesores_by_materia[
-                                                      _vm.materiaSeleccionada
-                                                    ]
-                                                },
-                                                model: {
-                                                  value:
-                                                    _vm.profesorSeleccionado,
-                                                  callback: function($$v) {
-                                                    _vm.profesorSeleccionado = $$v
-                                                  },
-                                                  expression:
-                                                    "profesorSeleccionado"
-                                                }
-                                              }),
-                                              _vm._v(" "),
-                                              _c("v-text-field", {
-                                                attrs: {
-                                                  rules: [
-                                                    _vm.rules_AgendaAsesoria
-                                                      .requerid,
-                                                    _vm.rules_AgendaAsesoria
-                                                      .maxCaracteres
-                                                  ],
-                                                  label: "tema",
-                                                  counter: ""
-                                                },
-                                                model: {
-                                                  value: _vm.tema,
-                                                  callback: function($$v) {
-                                                    _vm.tema = $$v
-                                                  },
-                                                  expression: "tema"
-                                                }
-                                              })
-                                            ],
-                                            1
-                                          )
-                                        ],
-                                        1
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "v-row",
-                                        {
-                                          staticClass:
-                                            "d-flex justify-space-around"
-                                        },
-                                        [
-                                          _c(
-                                            "v-btn",
-                                            {
-                                              attrs: {
-                                                type: "submit",
-                                                outlined: "",
-                                                color: "green"
-                                              }
-                                            },
-                                            [_vm._v("agendar")]
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "v-btn",
-                                            {
-                                              attrs: {
-                                                outlined: "",
-                                                color: "yellow"
-                                              },
-                                              on: {
-                                                click: function($event) {
-                                                  return _vm.$refs.formAgendaAsesoria.reset()
-                                                }
-                                              }
-                                            },
-                                            [_vm._v("reset")]
-                                          )
-                                        ],
-                                        1
-                                      )
-                                    ],
-                                    1
-                                  )
-                                ],
-                                1
-                              )
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  ),
+                  _c("v-card-title", [
+                    _vm._v("Administrar Peticiones de Asesorias")
+                  ]),
                   _vm._v(" "),
-                  _c(
-                    "v-col",
-                    { attrs: { cols: 12 } },
-                    [
-                      _c(
-                        "v-card",
-                        [
-                          _c("v-card-title", [_vm._v("Administrar Asesorias")]),
-                          _vm._v(" "),
-                          _c("v-card-text", [
-                            _vm._v(
-                              "\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                        "
-                            )
-                          ])
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  )
+                  _c("v-card-text", [
+                    _vm._v(
+                      "\n                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                "
+                    )
+                  ])
                 ],
                 1
               )
@@ -38808,34 +38752,297 @@ var render = function() {
           _vm._v(" "),
           _c(
             "v-col",
-            { attrs: { cols: 4 } },
+            { attrs: { cols: 12 } },
             [
-              _c(
-                "v-row",
-                [
-                  _c(
-                    "v-col",
-                    { attrs: { cols: 12 } },
-                    [
-                      _c(
-                        "v-card",
-                        [
-                          _c("v-card-title", [_vm._v("Administrar Asesorias")]),
-                          _vm._v(" "),
-                          _c("v-card-text", [
-                            _vm._v(
-                              "\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                        "
+              _c("v-data-table", {
+                staticClass: "elevation-1",
+                attrs: {
+                  headers: _vm.headers,
+                  items: _vm.peticionesAsesorias,
+                  "sort-by": "materia"
+                },
+                scopedSlots: _vm._u([
+                  {
+                    key: "top",
+                    fn: function() {
+                      return [
+                        _c(
+                          "v-toolbar",
+                          { attrs: { flat: "", color: "white" } },
+                          [
+                            _c("v-toolbar-title", [_vm._v("Peticiones")]),
+                            _vm._v(" "),
+                            _c("v-divider", {
+                              staticClass: "mx-4",
+                              attrs: { inset: "", vertical: "" }
+                            }),
+                            _vm._v(" "),
+                            _c("v-spacer"),
+                            _vm._v(" "),
+                            _c(
+                              "v-dialog",
+                              {
+                                attrs: { "max-width": "500px" },
+                                scopedSlots: _vm._u([
+                                  {
+                                    key: "activator",
+                                    fn: function(ref) {
+                                      var on = ref.on
+                                      return [
+                                        _c(
+                                          "v-btn",
+                                          _vm._g(
+                                            {
+                                              attrs: {
+                                                color: "green",
+                                                outlined: ""
+                                              }
+                                            },
+                                            on
+                                          ),
+                                          [_vm._v("Nueva Peticion")]
+                                        )
+                                      ]
+                                    }
+                                  }
+                                ]),
+                                model: {
+                                  value: _vm.dialog,
+                                  callback: function($$v) {
+                                    _vm.dialog = $$v
+                                  },
+                                  expression: "dialog"
+                                }
+                              },
+                              [
+                                _vm._v(" "),
+                                _c(
+                                  "v-card",
+                                  [
+                                    _c("v-card-title", [
+                                      _vm._v(
+                                        "idAlumno: " + _vm._s(_vm.id_alumno)
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-container",
+                                      [
+                                        _c(
+                                          "v-form",
+                                          {
+                                            ref: "formAgendaAsesoria",
+                                            attrs: { action: "" },
+                                            on: {
+                                              submit: function($event) {
+                                                $event.preventDefault()
+                                                return _vm.submit($event)
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c(
+                                              "v-card-text",
+                                              [
+                                                _c(
+                                                  "v-row",
+                                                  {
+                                                    attrs: {
+                                                      align: "center",
+                                                      justify: "center"
+                                                    }
+                                                  },
+                                                  [
+                                                    _c(
+                                                      "v-col",
+                                                      { attrs: { cols: 8 } },
+                                                      [
+                                                        _c("v-autocomplete", {
+                                                          attrs: {
+                                                            rules: [
+                                                              _vm
+                                                                .rules_AgendaAsesoria
+                                                                .requerid
+                                                            ],
+                                                            label: "materia",
+                                                            items:
+                                                              _vm.materiasDisponibles
+                                                          },
+                                                          model: {
+                                                            value:
+                                                              _vm.materiaSeleccionada,
+                                                            callback: function(
+                                                              $$v
+                                                            ) {
+                                                              _vm.materiaSeleccionada = $$v
+                                                            },
+                                                            expression:
+                                                              "materiaSeleccionada"
+                                                          }
+                                                        }),
+                                                        _vm._v(" "),
+                                                        _c("v-autocomplete", {
+                                                          attrs: {
+                                                            rules: [
+                                                              _vm
+                                                                .rules_AgendaAsesoria
+                                                                .requerid
+                                                            ],
+                                                            label: "profesor",
+                                                            items:
+                                                              _vm
+                                                                .info_profesores_by_materia[
+                                                                _vm
+                                                                  .materiaSeleccionada
+                                                              ]
+                                                          },
+                                                          model: {
+                                                            value:
+                                                              _vm.profesorSeleccionado,
+                                                            callback: function(
+                                                              $$v
+                                                            ) {
+                                                              _vm.profesorSeleccionado = $$v
+                                                            },
+                                                            expression:
+                                                              "profesorSeleccionado"
+                                                          }
+                                                        }),
+                                                        _vm._v(" "),
+                                                        _c("v-text-field", {
+                                                          attrs: {
+                                                            rules: [
+                                                              _vm
+                                                                .rules_AgendaAsesoria
+                                                                .requerid,
+                                                              _vm
+                                                                .rules_AgendaAsesoria
+                                                                .maxCaracteres
+                                                            ],
+                                                            label: "tema",
+                                                            counter: ""
+                                                          },
+                                                          model: {
+                                                            value: _vm.tema,
+                                                            callback: function(
+                                                              $$v
+                                                            ) {
+                                                              _vm.tema = $$v
+                                                            },
+                                                            expression: "tema"
+                                                          }
+                                                        })
+                                                      ],
+                                                      1
+                                                    )
+                                                  ],
+                                                  1
+                                                )
+                                              ],
+                                              1
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "v-card-actions",
+                                              [
+                                                _c(
+                                                  "v-container",
+                                                  [
+                                                    _c(
+                                                      "v-row",
+                                                      {
+                                                        staticClass:
+                                                          "d-flex justify-space-around"
+                                                      },
+                                                      [
+                                                        _c(
+                                                          "v-btn",
+                                                          {
+                                                            attrs: {
+                                                              type: "submit",
+                                                              outlined: "",
+                                                              color: "green"
+                                                            }
+                                                          },
+                                                          [_vm._v("Agendar")]
+                                                        ),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                          "v-btn",
+                                                          {
+                                                            attrs: {
+                                                              outlined: "",
+                                                              color: "red"
+                                                            },
+                                                            on: {
+                                                              click:
+                                                                _vm.cancelPeticion
+                                                            }
+                                                          },
+                                                          [_vm._v("Cancel")]
+                                                        )
+                                                      ],
+                                                      1
+                                                    )
+                                                  ],
+                                                  1
+                                                )
+                                              ],
+                                              1
+                                            )
+                                          ],
+                                          1
+                                        )
+                                      ],
+                                      1
+                                    )
+                                  ],
+                                  1
+                                )
+                              ],
+                              1
                             )
-                          ])
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
+                          ],
+                          1
+                        )
+                      ]
+                    },
+                    proxy: true
+                  },
+                  {
+                    key: "item.estado",
+                    fn: function(ref) {
+                      var item = ref.item
+                      return [
+                        _c(
+                          "v-chip",
+                          { attrs: { color: _vm.getColorEstado(item.estado) } },
+                          [_vm._v(_vm._s(item.estado))]
+                        )
+                      ]
+                    }
+                  },
+                  {
+                    key: "item.action",
+                    fn: function(ref) {
+                      var item = ref.item
+                      return [
+                        _c(
+                          "v-icon",
+                          {
+                            on: {
+                              click: function($event) {
+                                return _vm.deletePeticion(item)
+                              }
+                            }
+                          },
+                          [_vm._v("delete")]
+                        )
+                      ]
+                    }
+                  }
+                ])
+              })
             ],
             1
           )

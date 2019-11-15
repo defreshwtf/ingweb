@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Asesoria extends Model
+class Peticion extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,26 +12,25 @@ class Asesoria extends Model
      * @var array
      */
     protected $fillable = [
-        'idMateria',
-        'idProfesor',
-        'fecha_hora',
-        "lugar",
         "estado",
         "tema",
+        "idAlumno",
+        "idProfesor",
+        "idMateria",
     ];
-    
-    public function materia()
+
+    public function alumno()
     {
-        return $this->belongsTo('App\Materia',"idMateria");
+        return $this->belongsTo('App\Alumno',"idAlumno");
     }
 
     public function profesor()
     {
         return $this->belongsTo('App\Profesor',"idProfesor");
     }
-    
-    public function alumnos()
+
+    public function materia()
     {
-        return $this->belongsToMany('App\Alumno', "alumno_asesoria","idAsesoria","idAlumno")->withPivot('tema');
+        return $this->belongsTo('App\Materia',"idMateria");
     }
 }
