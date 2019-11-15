@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->timestamps();
         });
 
-        DB::update("ALTER TABLE users AUTO_INCREMENT = 21122019;");
+        DB::update("ALTER TABLE users AUTO_INCREMENT = 20191121;");
     }
 
     /**

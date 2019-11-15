@@ -2492,7 +2492,7 @@ __webpack_require__.r(__webpack_exports__);
             materia: _this.materiaSeleccionada,
             profesor: _this.profesorSeleccionado,
             estado: "pendiente",
-            temaPropuesto: _this.tema
+            tema: _this.tema
           });
 
           console.log(response);

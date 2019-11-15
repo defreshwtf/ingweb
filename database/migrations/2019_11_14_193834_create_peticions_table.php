@@ -29,7 +29,7 @@ class CreatePeticionsTable extends Migration
             $table->foreign("idMateria")->references("id")->on("materias");
         });
 
-        DB::update("ALTER TABLE peticions AUTO_INCREMENT = 21122019;");
+        DB::update("ALTER TABLE peticions AUTO_INCREMENT = 20191121;");
 
     }
 

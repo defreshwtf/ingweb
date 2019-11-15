@@ -27,7 +27,7 @@ class CreateAsesoriasTable extends Migration
             $table->foreign("idProfesor")->references("id")->on("profesors");
         });
 
-        DB::update("ALTER TABLE asesorias AUTO_INCREMENT = 21122019;");
+        DB::update("ALTER TABLE asesorias AUTO_INCREMENT = 20191121;");
     }
 
     /**

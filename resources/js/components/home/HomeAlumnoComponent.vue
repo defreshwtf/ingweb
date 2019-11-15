@@ -180,7 +180,7 @@ export default {
                             materia: this.materiaSeleccionada,
                             profesor: this.profesorSeleccionado,
                             estado:"pendiente",
-                            temaPropuesto: this.tema,
+                            tema: this.tema,
                         });
                         console.log(response);
                         this.materiaSeleccionada = "";

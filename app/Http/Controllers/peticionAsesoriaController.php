@@ -102,8 +102,7 @@ class PeticionAsesoriaController extends Controller
         $peticion->profesor()->associate($profesor);
         $peticion->alumno()->associate($alumno);
 
-        // return response()->json(["sucess" => true, "idPeticion" => $peticion->id, "estado" => "pendiente"], 200);
-        return response()->json($peticion->materia, 200);
+        return response()->json(["sucess" => true, "idPeticion" => $peticion->id, "estado" => "pendiente"], 200);
     }
 
     /**

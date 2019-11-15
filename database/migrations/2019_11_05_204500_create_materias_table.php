@@ -19,7 +19,7 @@ class CreateMateriasTable extends Migration
             $table->string("descripcion");
             $table->timestamps();
         });
-        DB::update("ALTER TABLE materias AUTO_INCREMENT = 21122019;");
+        DB::update("ALTER TABLE materias AUTO_INCREMENT = 20191121;");
     }
 
     /**
