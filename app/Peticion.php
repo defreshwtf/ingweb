@@ -17,6 +17,7 @@ class Peticion extends Model
         "idAlumno",
         "idProfesor",
         "idMateria",
+        "idAsesoria",
     ];
 
     public function alumno()
