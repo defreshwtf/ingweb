@@ -23,4 +23,9 @@ class Alumno extends Model
     {
         return $this->hasMany("App\Peticion","idAlumno");
     }
+
+    public function asesorias()
+    {
+        return $this->belongsToMany("App\Asesoria", "alumno_asesoria", "idAlumno", "idAsesoria");
+    }
 }

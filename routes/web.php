@@ -21,6 +21,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('peticionAsesoria', 'PeticionAsesoriaController')
 ->only([
-    'store',
+    "store",
+    "index",
+]);
+Route::resource('asesorias', 'AsesoriasController')
+->only([
+    "store",
     "index",
 ]);

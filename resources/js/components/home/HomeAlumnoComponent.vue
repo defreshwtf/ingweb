@@ -58,13 +58,13 @@
                     sort-by="materia"
                     class="elevation-1"
                 >
-                    <template v-slot:top>
+                    <template #top>
                         <v-toolbar flat color="white">
                             <v-toolbar-title>Peticiones</v-toolbar-title>
                             <v-divider class="mx-4" inset vertical></v-divider>
                             <v-spacer></v-spacer>
                             <v-dialog v-model="dialog" max-width="500px">
-                                <template v-slot:activator="{ on }">
+                                <template #activator="{ on }">
                                     <v-btn color="green" outlined v-on="on">Nueva Peticion</v-btn>
                                 </template>
                                 <v-card>
@@ -121,10 +121,10 @@
                             </v-dialog>
                         </v-toolbar>
                     </template>
-                    <template v-slot:item.estado="{ item }">
+                    <template #item.estado="{ item }">
                         <v-chip :color="getColorEstado(item.estado)">{{ item.estado }}</v-chip>
                     </template>
-                    <template v-slot:item.action="{ item }">
+                    <template #item.action="{ item }">
                         <v-icon @click="deletePeticion(item)">delete</v-icon>
                     </template>
                 </v-data-table>

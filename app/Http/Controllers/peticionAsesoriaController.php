@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
-
 use App\Materia;
+use App\Peticion;
 use App\Profesor;
 use App\User;
-use App\Peticion;
-
+use Auth;
 use Illuminate\Http\Request;
 
 class PeticionAsesoriaController extends Controller
@@ -21,13 +19,13 @@ class PeticionAsesoriaController extends Controller
     public function index()
     {
         $profesor = Auth::user()->profesor;
-        
-        if(is_null($profesor)){
+
+        if (is_null($profesor)) {
             $alumno = Auth::user()->alumno;
 
             $peticions = $alumno->peticions;
             $info = [];
-            foreach($peticions as $peticion){
+            foreach ($peticions as $peticion) {
                 $infoTemp = [];
                 $infoTemp["idPeticion"] = $peticion->id;
                 $infoTemp["profesor"] = $peticion->profesor->user->name;
@@ -38,6 +36,15 @@ class PeticionAsesoriaController extends Controller
             }
         } else {
             $info = [];
+            $peticions = $profesor->peticions;
+            foreach ($peticions as $peticion) {
+                $infoTemp = [];
+                $infoTemp["idPeticion"] = $peticion->id;
+                $infoTemp["materia"] = $peticion->materia->nombre;
+                $infoTemp["estado"] = $peticion->estado;
+                $infoTemp["tema"] = $peticion->tema;
+                array_push($info, $infoTemp);
+            }
         }
 
         return response()->json($info);
@@ -63,11 +70,11 @@ class PeticionAsesoriaController extends Controller
         $nomMateria = $request->nomMateria;
         $nomProfesor = $request->nomProfesor;
         $tema = $request->tema;
-        
+
         $materia = Materia::where("nombre", $nomMateria)->first();
         $profesor = User::where("name", $nomProfesor)->first()->profesor;
         $alumno = Auth::user()->alumno;
-        
+
         $peticion = Peticion::create([
             "tema" => $tema,
             "idMateria" => $materia->id,

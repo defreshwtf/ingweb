@@ -27,6 +27,8 @@ Vue.use(Vuetify)
 Vue.component('home-component', require('./components/home/HomeComponent.vue').default);
 Vue.component('home-profesor-component', require('./components/home/HomeProfesorComponent.vue').default);
 Vue.component('home-alumno-component', require('./components/home/HomeAlumnoComponent.vue').default);
+Vue.component('peticiones-component', require('./components/home/PeticionesComponent.vue').default);
+Vue.component('asesorias-component', require('./components/home/AsesoriasComponent.vue').default);
 
 Vue.component('welcome-component', require('./components/WelcomeComponent.vue').default);
 

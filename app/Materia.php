@@ -24,4 +24,9 @@ class Materia extends Model
     {
         return $this->belongsToMany('App\Profesor', "materia_profesor","idMateria","idProfesor");
     }
+
+    public function asesorias()
+    {
+        return $this->hasMany('App\Asesoria',"idMateria");
+    }
 }
