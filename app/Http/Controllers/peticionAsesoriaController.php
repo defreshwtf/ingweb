@@ -37,7 +37,6 @@ class PeticionAsesoriaController extends Controller
                 array_push($info, $infoTemp);
             }
         } else {
-            // $peticions = Peticion::where("idProfesor",$user->id)->get();
             $info = [];
         }
 
@@ -61,27 +60,6 @@ class PeticionAsesoriaController extends Controller
      */
     public function store(Request $request)
     {
-        // se validan los datos en el lado del cliente, asi que no sera necesarios
-        // las siguientes validaciones
-        
-        // $camposFaltantes = [];
-        // $error = false;
-        // if (!$request->has('idAlumno')) {
-        //     array_push($camposFaltantes, "idAlumno");
-        //     $error = true;
-        // }
-        // if (!$request->has('nomMateria')) {
-        //     array_push($camposFaltantes, "nomMateria");
-        //     $error = true;
-        // }
-        // if (!$request->has('nomProfesor')) {
-        //     array_push($camposFaltantes, "nomProfesor");
-        //     $error = true;
-        // }
-        // if ($error) {
-        //     return response()->json(["error" => "campos faltantes", "campos" => $camposFaltantes], 500);
-        // }
-
         $nomMateria = $request->nomMateria;
         $nomProfesor = $request->nomProfesor;
         $tema = $request->tema;

@@ -7,8 +7,10 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+window.moment = require('moment');
 
 import Vuetify from 'vuetify'
+// import "vuetify/dist/vuetify.min.css";
 
 Vue.use(Vuetify)
 /**

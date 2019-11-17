@@ -1,0 +1,22 @@
+{
+    "sqltools.connections": [
+        {
+            "database": "biofisicaDB",
+            "dialect": "MariaDB",
+            "name": "biofisicaDB",
+            "password": "15628311.xMariaDB",
+            "port": 3306,
+            "server": "localhost",
+            "username": "xDB"
+        },
+        {
+            "database": "ingweb",
+            "dialect": "MariaDB",
+            "name": "ingweb",
+            "password": "15628311.xMariaDB",
+            "port": 3306,
+            "server": "localhost",
+            "username": "xDB"
+        }
+    ]
+}
