@@ -290,6 +290,15 @@ export default {
     created() {
         this.getInfoPeticiones();
     },
-    watch: {},
+    watch: {
+        fechaSeleccionada(fecha){
+            this.horaSeleccionada = null;
+            if(moment().format('YYYY-MM-DD') == fecha) {
+                this.minHora = moment().format("HH:mm");
+            } else {
+                this.minHora = "";
+            }
+        },
+    },
 };
 </script>

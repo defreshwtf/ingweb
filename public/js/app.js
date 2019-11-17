@@ -2897,7 +2897,17 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     this.getInfoPeticiones();
   },
-  watch: {}
+  watch: {
+    fechaSeleccionada: function fechaSeleccionada(fecha) {
+      this.horaSeleccionada = null;
+
+      if (moment().format('YYYY-MM-DD') == fecha) {
+        this.minHora = moment().format("HH:mm");
+      } else {
+        this.minHora = "";
+      }
+    }
+  }
 });
 
 /***/ }),
