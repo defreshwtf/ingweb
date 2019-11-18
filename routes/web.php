@@ -23,9 +23,12 @@ Route::resource('peticionAsesoria', 'PeticionAsesoriaController')
 ->only([
     "store",
     "index",
+    "edit",
+    "destroy"
 ]);
 Route::resource('asesorias', 'AsesoriasController')
 ->only([
     "store",
     "index",
+    "destroy"
 ]);

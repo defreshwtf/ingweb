@@ -20,6 +20,7 @@
             </v-row>
             <peticiones-component :id_profesor="id_profesor"></peticiones-component>
             <asesorias-component :id_profesor="id_profesor"></asesorias-component>
+            <a @asesoriaAgendada="true"></a>
         </v-container>
     </div>
 </template>

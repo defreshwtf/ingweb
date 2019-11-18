@@ -18,10 +18,10 @@ class CreateAlumnoAsesoriaTable extends Migration
             $table->timestamps();
 
             $table->bigInteger("idAlumno")->unsigned();
-            $table->foreign("idAlumno")->references("id")->on("alumnos");
+            $table->foreign("idAlumno")->references("id")->on("alumnos")->onDelete("cascade");
 
             $table->bigInteger("idAsesoria")->unsigned();
-            $table->foreign("idAsesoria")->references("id")->on("asesorias");
+            $table->foreign("idAsesoria")->references("id")->on("asesorias")->onDelete("cascade");
         });
     }
 

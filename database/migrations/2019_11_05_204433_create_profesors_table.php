@@ -18,7 +18,7 @@ class CreateProfesorsTable extends Migration
             $table->timestamps();
 
             $table->bigInteger("idUser")->unsigned();
-            $table->foreign("idUser")->references("id")->on("users");
+            $table->foreign("idUser")->references("id")->on("users")->onDelete("cascade");
         });
 
         DB::update("ALTER TABLE profesors AUTO_INCREMENT = 20191121;");

@@ -7,6 +7,8 @@ use App\Peticion;
 use App\Profesor;
 use App\User;
 use Auth;
+use Carbon\Carbon;
+
 use Illuminate\Http\Request;
 
 class PeticionAsesoriaController extends Controller
@@ -23,7 +25,7 @@ class PeticionAsesoriaController extends Controller
         if (is_null($profesor)) {
             $alumno = Auth::user()->alumno;
 
-            $peticions = $alumno->peticions;
+            $peticions = $alumno->peticions->where("estado", "!=", "aceptada");
             $info = [];
             foreach ($peticions as $peticion) {
                 $infoTemp = [];
@@ -36,7 +38,7 @@ class PeticionAsesoriaController extends Controller
             }
         } else {
             $info = [];
-            $peticions = $profesor->peticions;
+            $peticions = $profesor->peticions->where("estado", "!=", "aceptada");
             foreach ($peticions as $peticion) {
                 $infoTemp = [];
                 $infoTemp["idPeticion"] = $peticion->id;
@@ -72,7 +74,7 @@ class PeticionAsesoriaController extends Controller
         $tema = $request->tema;
 
         $materia = Materia::where("nombre", $nomMateria)->first();
-        $profesor = User::where("name", $nomProfesor)->first()->profesor;
+        $profesor = User::has("profesor")->where("name", $nomProfesor)->first()->profesor;
         $alumno = Auth::user()->alumno;
 
         $peticion = Peticion::create([
@@ -106,6 +108,10 @@ class PeticionAsesoriaController extends Controller
      */
     public function edit($id)
     {
+        $peticion = Peticion::where("id", $id)->first();
+        $peticion->estado = "rechazada";
+        $peticion->save();
+        return response()->json($peticion, 200);
     }
 
     /**
@@ -127,5 +133,8 @@ class PeticionAsesoriaController extends Controller
      */
     public function destroy($id)
     {
+        $peticion = Peticion::where("id", $id)->first();
+        $peticion->delete();
+        return response()->json($peticion, 200);
     }
 }

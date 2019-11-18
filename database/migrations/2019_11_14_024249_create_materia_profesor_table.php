@@ -18,10 +18,10 @@ class CreateMateriaProfesorTable extends Migration
             $table->timestamps();
 
             $table->bigInteger("idProfesor")->unsigned();
-            $table->foreign("idProfesor")->references("id")->on("profesors");
+            $table->foreign("idProfesor")->references("id")->on("profesors")->onDelete("cascade");
 
             $table->bigInteger("idMateria")->unsigned();
-            $table->foreign("idMateria")->references("id")->on("materias");
+            $table->foreign("idMateria")->references("id")->on("materias")->onDelete("cascade");
         });
     }
 

@@ -47,6 +47,7 @@
                         <v-icon @click="deleteAsesoria(item)" title="eliminar asesoria">delete</v-icon>
                     </template>
                 </v-data-table>
+                <a @asesoriaAgendada="catchEvent_asesoriaAgendada"></a>
             </v-col>
         </v-row>
     </div>
@@ -71,25 +72,49 @@ export default {
                 { text: "Lugar", value: "lugar" },
                 { text: "Acciones", value: "action", sortable: false }
             ],
-            asesoriasInfo: [
-                {
-                    idAsesoria: "idAsesoria",
-                    materia: "materia",
-                    tema: "tema",
-                    fecha_hora: "fecha_hora",
-                    lugar: "lugar"
-                }
-            ],
+            asesoriasInfo: [],
             asesoriasInfo_Alumnos: []
         };
     },
     methods: {
+        catchEvent_asesoriaAgendada(asesoriaInfo){
+            this.asesoriasInfo.push(asesoriaInfo);
+            console.log("asesoria agendada correctamente!!!");
+        },
+        getInfoAsesorias(){
+            axios
+                .get("http://ingweb.xgab.com/asesorias")
+                .then(response => {
+                    // console.log(response.data);
+                    response.data.forEach(e => {
+                        this.asesoriasInfo.push(e);
+                    });
+                })
+                .catch(error => {
+                    console.log(error.response) || console.log(error);
+                });
+        },
         showMoreInfo_Asesoria(asesoria) {
             this.showDialog_infoAsesoria = true;
         },
-        deleteAsesoria(asesoria) {},
+        deleteAsesoria(asesoria) {
+            let idAsesoria = asesoria.idAsesoria;
+            axios
+                .delete("http://ingweb.xgab.com/asesorias/" + idAsesoria)
+                .then( response => {
+                    console.log(response.data);
+                    let index = this.asesoriasInfo.indexOf(asesoria);
+                    this.asesoriasInfo.splice(index, 1);
+                })
+                .catch( error => {
+                    console.log(error.response) || console.log(error);
+                });
+        },
         cancelEditAsesoria(asesoria) {},
         saveAsesoria(asesoria) {},
     },
+    created() {
+        this.getInfoAsesorias();
+    },
 };
-</script>
+</script>x

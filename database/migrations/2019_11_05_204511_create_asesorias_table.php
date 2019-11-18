@@ -21,10 +21,10 @@ class CreateAsesoriasTable extends Migration
             $table->timestamps();
 
             $table->bigInteger("idProfesor")->unsigned();
-            $table->foreign("idProfesor")->references("id")->on("profesors");
+            $table->foreign("idProfesor")->references("id")->on("profesors")->onDelete("cascade");
 
             $table->bigInteger("idMateria")->unsigned();
-            $table->foreign("idMateria")->references("id")->on("materias");
+            $table->foreign("idMateria")->references("id")->on("materias")->onDelete("cascade");
         });
 
         DB::update("ALTER TABLE asesorias AUTO_INCREMENT = 20191121;");

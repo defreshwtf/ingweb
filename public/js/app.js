@@ -2353,6 +2353,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id_profesor"],
   data: function data() {
@@ -2380,23 +2381,49 @@ __webpack_require__.r(__webpack_exports__);
         value: "action",
         sortable: false
       }],
-      asesoriasInfo: [{
-        idAsesoria: "idAsesoria",
-        materia: "materia",
-        tema: "tema",
-        fecha_hora: "fecha_hora",
-        lugar: "lugar"
-      }],
+      asesoriasInfo: [],
       asesoriasInfo_Alumnos: []
     };
   },
   methods: {
+    catchEvent_asesoriaAgendada: function catchEvent_asesoriaAgendada(asesoriaInfo) {
+      this.asesoriasInfo.push(asesoriaInfo);
+      console.log("asesoria agendada correctamente!!!");
+    },
+    getInfoAsesorias: function getInfoAsesorias() {
+      var _this = this;
+
+      axios.get("http://ingweb.xgab.com/asesorias").then(function (response) {
+        // console.log(response.data);
+        response.data.forEach(function (e) {
+          _this.asesoriasInfo.push(e);
+        });
+      })["catch"](function (error) {
+        console.log(error.response) || console.log(error);
+      });
+    },
     showMoreInfo_Asesoria: function showMoreInfo_Asesoria(asesoria) {
       this.showDialog_infoAsesoria = true;
     },
-    deleteAsesoria: function deleteAsesoria(asesoria) {},
+    deleteAsesoria: function deleteAsesoria(asesoria) {
+      var _this2 = this;
+
+      var idAsesoria = asesoria.idAsesoria;
+      axios["delete"]("http://ingweb.xgab.com/asesorias/" + idAsesoria).then(function (response) {
+        console.log(response.data);
+
+        var index = _this2.asesoriasInfo.indexOf(asesoria);
+
+        _this2.asesoriasInfo.splice(index, 1);
+      })["catch"](function (error) {
+        console.log(error.response) || console.log(error);
+      });
+    },
     cancelEditAsesoria: function cancelEditAsesoria(asesoria) {},
     saveAsesoria: function saveAsesoria(asesoria) {}
+  },
+  created: function created() {
+    this.getInfoAsesorias();
   }
 });
 
@@ -2607,7 +2634,7 @@ __webpack_require__.r(__webpack_exports__);
             tema: _this.tema
           });
 
-          console.log(response);
+          console.log(response.data);
           _this.materiaSeleccionada = "";
           _this.profesorSeleccionado = "";
           _this.tema = "";
@@ -2638,14 +2665,18 @@ __webpack_require__.r(__webpack_exports__);
           _this2.peticionesAsesorias.push(e);
         });
       })["catch"](function (error) {
-        console.log(error);
+        console.log(error.response) || console.log(error);
       });
     },
-    deletePeticion: function deletePeticion(item) {//
-      // corregir
-      //
-      // const index = this.peticionesAsesorias.indexOf(item);
-      // this.peticionesAsesorias.splice(index, 1);
+    deletePeticion: function deletePeticion(item) {
+      var index = this.peticionesAsesorias.indexOf(item);
+      this.peticionesAsesorias.splice(index, 1);
+      var idPeticion = item.idPeticion;
+      axios["delete"]("http://ingweb.xgab.com/peticionAsesoria/".concat(idPeticion)).then(function (response) {
+        console.log(response.data);
+      })["catch"](function (error) {
+        console.log(error.response) || console.log(error);
+      });
     },
     cancelPeticion: function cancelPeticion() {
       this.dialog = false;
@@ -2712,6 +2743,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -2932,6 +2964,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id_profesor"],
   data: function data() {
@@ -2943,6 +2986,8 @@ __webpack_require__.r(__webpack_exports__);
       minHora: "",
       showSelectHora: false,
       horaSeleccionada: null,
+      tema: "",
+      lugar: "",
       peticionesSeleccionadas: [],
       headers: [{
         text: "idPeticion",
@@ -2963,12 +3008,20 @@ __webpack_require__.r(__webpack_exports__);
         value: "action",
         sortable: false
       }],
-      peticionesAsesorias: []
+      peticionesAsesorias: [],
+      rules_AgendaAsesoria: {
+        requerid: function requerid(v) {
+          return !!v || "campo requerido";
+        },
+        maxCaracteres: function maxCaracteres(v) {
+          return !!v && v.length <= 50 || "max 50 caracteres";
+        }
+      }
     };
   },
   methods: {
     allowedHours: function allowedHours(v) {
-      return v >= 7 && v <= 19;
+      return v >= 7 && v <= 18;
     },
     getColorEstado: function getColorEstado(estado) {
       if (estado === "pendiente") {
@@ -2983,12 +3036,12 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.get("http://ingweb.xgab.com/peticionAsesoria").then(function (response) {
-        console.log(response.data);
+        // console.log(response.data);
         response.data.forEach(function (e) {
           _this.peticionesAsesorias.push(e);
         });
       })["catch"](function (error) {
-        console.log(error);
+        console.log(error.response) || console.log(error);
       });
     },
     cancelAsesoria: function cancelAsesoria() {
@@ -3004,19 +3057,61 @@ __webpack_require__.r(__webpack_exports__);
       });
       this.peticionesSeleccionadas = [];
     },
-    agendaAsesoria: function agendaAsesoria() {},
-    deletePeticion: function deletePeticion(peticion) {},
+    agendaAsesoria: function agendaAsesoria() {
+      var _this3 = this;
+
+      if (this.$refs.formAgendaAsesoria.validate()) {
+        axios.post("http://ingweb.xgab.com/asesorias", {
+          peticionesSeleccionadas: this.peticionesSeleccionadas,
+          fechaSeleccionada: this.fechaSeleccionada,
+          horaSeleccionada: this.horaSeleccionada,
+          tema: this.tema,
+          lugar: this.lugar
+        }).then(function (response) {
+          var idAsesoria = response.data.idAsesoria;
+          var materia = response.data.materia; // console.log(response.data);
+
+          _this3.$emit("asesoriaAgendada", {
+            idAsesoria: idAsesoria,
+            materia: materia,
+            tema: _this3.tema,
+            fecha_hora: _this3.fechaSeleccionada + " " + _this3.horaSeleccionada,
+            lugar: _this3.lugar
+          });
+
+          _this3.tema = "";
+          _this3.lugar = "";
+          _this3.fechaSeleccionada = new Date().toISOString().substr(0, 10);
+          _this3.horaSeleccionada = null;
+          _this3.dialog = false;
+          _this3.peticionesSeleccionadas = [];
+        })["catch"](function (error) {
+          console.log(error.response) || console.log(error);
+        });
+      }
+    },
+    rechazarPeticion: function rechazarPeticion(peticion) {
+      var idPeticion = peticion.idPeticion;
+      axios.get("http://ingweb.xgab.com/peticionAsesoria/".concat(idPeticion, "/edit")).then(function (response) {
+        console.log(response.data);
+        peticion.estado = "rechazada";
+      })["catch"](function (error) {
+        console.log(error.response) || console.log(error);
+      });
+    },
     deletePeticion_fromAsesoria: function deletePeticion_fromAsesoria(peticionInfo) {
       var index = this.peticionesSeleccionadas.indexOf(peticionInfo);
       this.peticionesSeleccionadas.splice(index, 1);
       this.peticionesAsesorias.push(peticionInfo);
     },
     addAlumno_to_Asesoria: function addAlumno_to_Asesoria(peticionInfo) {
-      var index = this.peticionesAsesorias.indexOf(peticionInfo);
-      this.peticionesAsesorias.splice(index, 1);
-      this.peticionesSeleccionadas.push(peticionInfo);
-      console.log(this.peticionesSeleccionadas);
-      console.log(this.peticionesSeleccionadas.length);
+      if (peticionInfo.estado != "rechazada") {
+        var index = this.peticionesAsesorias.indexOf(peticionInfo);
+        this.peticionesAsesorias.splice(index, 1);
+        this.peticionesSeleccionadas.push(peticionInfo);
+      } // console.log(this.peticionesSeleccionadas);
+      // console.log(this.peticionesSeleccionadas.length);
+
     }
   },
   created: function created() {
@@ -3027,7 +3122,7 @@ __webpack_require__.r(__webpack_exports__);
       this.horaSeleccionada = null;
 
       if (moment().format("YYYY-MM-DD") == fecha) {
-        this.minHora = moment().format("HH:mm");
+        this.minHora = moment().add("1", "hours").format("HH:mm");
       } else {
         this.minHora = "";
       }
@@ -56866,6 +56961,10 @@ var render = function() {
                     }
                   }
                 ])
+              }),
+              _vm._v(" "),
+              _c("a", {
+                on: { asesoriaAgendada: _vm.catchEvent_asesoriaAgendada }
               })
             ],
             1
@@ -57359,7 +57458,11 @@ var render = function() {
             attrs: { id_profesor: _vm.id_profesor }
           }),
           _vm._v(" "),
-          _c("asesorias-component", { attrs: { id_profesor: _vm.id_profesor } })
+          _c("asesorias-component", {
+            attrs: { id_profesor: _vm.id_profesor }
+          }),
+          _vm._v(" "),
+          _c("a", { on: { asesoriaAgendada: true } })
         ],
         1
       )
@@ -57592,7 +57695,22 @@ var render = function() {
                                                                 "prepend-icon":
                                                                   "menu_book",
                                                                 label:
-                                                                  "tema Asesoria"
+                                                                  "tema Asesoria",
+                                                                rules: [
+                                                                  _vm
+                                                                    .rules_AgendaAsesoria
+                                                                    .requerid
+                                                                ]
+                                                              },
+                                                              model: {
+                                                                value: _vm.tema,
+                                                                callback: function(
+                                                                  $$v
+                                                                ) {
+                                                                  _vm.tema = $$v
+                                                                },
+                                                                expression:
+                                                                  "tema"
                                                               }
                                                             })
                                                           ],
@@ -57610,7 +57728,23 @@ var render = function() {
                                                                 "prepend-icon":
                                                                   "place",
                                                                 counter: "",
-                                                                label: "lugar"
+                                                                label: "lugar",
+                                                                rules: [
+                                                                  _vm
+                                                                    .rules_AgendaAsesoria
+                                                                    .requerid
+                                                                ]
+                                                              },
+                                                              model: {
+                                                                value:
+                                                                  _vm.lugar,
+                                                                callback: function(
+                                                                  $$v
+                                                                ) {
+                                                                  _vm.lugar = $$v
+                                                                },
+                                                                expression:
+                                                                  "lugar"
                                                               }
                                                             })
                                                           ],
@@ -57656,7 +57790,12 @@ var render = function() {
                                                                                   "prepend-icon":
                                                                                     "event",
                                                                                   label:
-                                                                                    "fecha"
+                                                                                    "fecha",
+                                                                                  rules: [
+                                                                                    _vm
+                                                                                      .rules_AgendaAsesoria
+                                                                                      .requerid
+                                                                                  ]
                                                                                 },
                                                                                 model: {
                                                                                   value:
@@ -57785,7 +57924,12 @@ var render = function() {
                                                                                   "prepend-icon":
                                                                                     "access_time",
                                                                                   readonly:
-                                                                                    ""
+                                                                                    "",
+                                                                                  rules: [
+                                                                                    _vm
+                                                                                      .rules_AgendaAsesoria
+                                                                                      .requerid
+                                                                                  ]
                                                                                 },
                                                                                 model: {
                                                                                   value:
@@ -58006,34 +58150,38 @@ var render = function() {
                     fn: function(ref) {
                       var item = ref.item
                       return [
-                        _c(
-                          "v-icon",
-                          {
-                            attrs: { title: "eliminar peticion" },
-                            on: {
-                              click: function($event) {
-                                return _vm.deletePeticion(item)
-                              }
-                            }
-                          },
-                          [_vm._v("delete")]
-                        ),
+                        item.estado != "rechazada"
+                          ? _c(
+                              "v-icon",
+                              {
+                                attrs: { title: "eliminar peticion" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.rechazarPeticion(item)
+                                  }
+                                }
+                              },
+                              [_vm._v("delete")]
+                            )
+                          : _vm._e(),
                         _vm._v(" "),
-                        _c(
-                          "v-icon",
-                          {
-                            attrs: {
-                              title:
-                                "agrega la peticion para crear una asesoria"
-                            },
-                            on: {
-                              click: function($event) {
-                                return _vm.addAlumno_to_Asesoria(item)
-                              }
-                            }
-                          },
-                          [_vm._v("add")]
-                        )
+                        item.estado != "rechazada"
+                          ? _c(
+                              "v-icon",
+                              {
+                                attrs: {
+                                  title:
+                                    "agrega la peticion para crear una asesoria"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.addAlumno_to_Asesoria(item)
+                                  }
+                                }
+                              },
+                              [_vm._v("add")]
+                            )
+                          : _vm._e()
                       ]
                     }
                   }

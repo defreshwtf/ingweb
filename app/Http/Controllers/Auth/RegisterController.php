@@ -95,8 +95,8 @@ class RegisterController extends Controller
             $materias_seleccionadas = $data["materias_seleccionadas"];
 
             foreach ($materias_seleccionadas as $key => $value) {
-                $idMateria = Materia::where("nombre", $value)->value("id");
-                $profesor->materias()->attach($idMateria);
+                $materia = Materia::where("nombre", $value)->first();
+                $profesor->materias()->attach($materia);
             }
         }
 

@@ -51,6 +51,8 @@
                                                                 counter
                                                                 prepend-icon="menu_book"
                                                                 label="tema Asesoria"
+                                                                v-model="tema"
+                                                                :rules="[rules_AgendaAsesoria.requerid]"
                                                             ></v-text-field>
                                                         </v-col>
                                                         <v-col cols="7">
@@ -58,6 +60,8 @@
                                                                 prepend-icon="place"
                                                                 counter
                                                                 label="lugar"
+                                                                v-model="lugar"
+                                                                :rules="[rules_AgendaAsesoria.requerid]"
                                                             ></v-text-field>
                                                         </v-col>
                                                         <v-col cols="7">
@@ -75,6 +79,7 @@
                                                                         prepend-icon="event"
                                                                         v-on="on"
                                                                         label="fecha"
+                                                                        :rules="[rules_AgendaAsesoria.requerid]"
                                                                     ></v-text-field>
                                                                 </template>
                                                                 <v-date-picker
@@ -105,6 +110,7 @@
                                                                         prepend-icon="access_time"
                                                                         readonly
                                                                         v-on="on"
+                                                                        :rules="[rules_AgendaAsesoria.requerid]"
                                                                     ></v-text-field>
                                                                 </template>
                                                                 <v-time-picker
@@ -159,8 +165,13 @@
                         <v-chip :color="getColorEstado(item.estado)">{{ item.estado }}</v-chip>
                     </template>
                     <template #item.action="{ item }">
-                        <v-icon @click="deletePeticion(item)" title="eliminar peticion">delete</v-icon>
                         <v-icon
+                            v-if="item.estado != 'rechazada'"
+                            @click="rechazarPeticion(item)"
+                            title="eliminar peticion"
+                        >delete</v-icon>
+                        <v-icon
+                            v-if="item.estado != 'rechazada'"
                             @click="addAlumno_to_Asesoria(item)"
                             title="agrega la peticion para crear una asesoria"
                         >add</v-icon>
@@ -183,6 +194,8 @@ export default {
             minHora: "",
             showSelectHora: false,
             horaSeleccionada: null,
+            tema: "",
+            lugar: "",
             peticionesSeleccionadas: [],
             headers: [
                 {
@@ -196,11 +209,16 @@ export default {
                 { text: "Tema Propuesto", value: "tema" },
                 { text: "Acciones", value: "action", sortable: false }
             ],
-            peticionesAsesorias: []
+            peticionesAsesorias: [],
+            rules_AgendaAsesoria: {
+                requerid: v => !!v || "campo requerido",
+                maxCaracteres: v =>
+                    (!!v && v.length <= 50) || "max 50 caracteres"
+            }
         };
     },
     methods: {
-        allowedHours: v => v >= 7 && v <= 19,
+        allowedHours: v => v >= 7 && v <= 18,
         getColorEstado(estado) {
             if (estado === "pendiente") {
                 return "yellow";
@@ -213,13 +231,13 @@ export default {
             axios
                 .get("http://ingweb.xgab.com/peticionAsesoria")
                 .then(response => {
-                    console.log(response.data);
+                    // console.log(response.data);
                     response.data.forEach(e => {
                         this.peticionesAsesorias.push(e);
                     });
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.log(error.response) || console.log(error);
                 });
         },
         cancelAsesoria() {
@@ -233,19 +251,71 @@ export default {
             });
             this.peticionesSeleccionadas = [];
         },
-        agendaAsesoria() {},
-        deletePeticion(peticion) {},
+        agendaAsesoria() {
+            if (this.$refs.formAgendaAsesoria.validate()) {
+                axios
+                    .post("http://ingweb.xgab.com/asesorias", {
+                        peticionesSeleccionadas: this.peticionesSeleccionadas,
+                        fechaSeleccionada: this.fechaSeleccionada,
+                        horaSeleccionada: this.horaSeleccionada,
+                        tema: this.tema,
+                        lugar: this.lugar
+                    })
+                    .then(response => {
+                        let idAsesoria = response.data.idAsesoria;
+                        let materia = response.data.materia;
+                        // console.log(response.data);
+                        this.$emit("asesoriaAgendada", {
+                            idAsesoria: idAsesoria,
+                            materia: materia,
+                            tema: this.tema,
+                            fecha_hora:
+                                this.fechaSeleccionada +
+                                " " +
+                                this.horaSeleccionada,
+                            lugar: this.lugar
+                        });
+                        this.tema = "";
+                        this.lugar = "";
+                        this.fechaSeleccionada = new Date()
+                            .toISOString()
+                            .substr(0, 10);
+                        this.horaSeleccionada = null;
+                        this.dialog = false;
+                        this.peticionesSeleccionadas = [];
+                    })
+                    .catch(error => {
+                        console.log(error.response) || console.log(error);
+                    });
+            }
+        },
+        rechazarPeticion(peticion) {
+            let idPeticion = peticion.idPeticion;
+            axios
+                .get(
+                    `http://ingweb.xgab.com/peticionAsesoria/${idPeticion}/edit`
+                )
+                .then(response => {
+                    console.log(response.data);
+                    peticion.estado = "rechazada";
+                })
+                .catch(error => {
+                    console.log(error.response) || console.log(error);
+                });
+        },
         deletePeticion_fromAsesoria(peticionInfo) {
             let index = this.peticionesSeleccionadas.indexOf(peticionInfo);
             this.peticionesSeleccionadas.splice(index, 1);
             this.peticionesAsesorias.push(peticionInfo);
         },
         addAlumno_to_Asesoria(peticionInfo) {
-            let index = this.peticionesAsesorias.indexOf(peticionInfo);
-            this.peticionesAsesorias.splice(index, 1);
-            this.peticionesSeleccionadas.push(peticionInfo);
-            console.log(this.peticionesSeleccionadas);
-            console.log(this.peticionesSeleccionadas.length);
+            if (peticionInfo.estado != "rechazada") {
+                let index = this.peticionesAsesorias.indexOf(peticionInfo);
+                this.peticionesAsesorias.splice(index, 1);
+                this.peticionesSeleccionadas.push(peticionInfo);
+            }
+            // console.log(this.peticionesSeleccionadas);
+            // console.log(this.peticionesSeleccionadas.length);
         }
     },
     created() {
@@ -255,11 +325,13 @@ export default {
         fechaSeleccionada(fecha) {
             this.horaSeleccionada = null;
             if (moment().format("YYYY-MM-DD") == fecha) {
-                this.minHora = moment().format("HH:mm");
+                this.minHora = moment()
+                    .add("1", "hours")
+                    .format("HH:mm");
             } else {
                 this.minHora = "";
             }
         }
-    },
+    }
 };
 </script>

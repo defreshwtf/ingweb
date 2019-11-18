@@ -16,7 +16,7 @@ class Asesoria extends Model
         "lugar",
         "tema",
         "idProfesor",
-        "idAsesoria",
+        "idMateria",
     ];
 
     public function peticions()

@@ -20,16 +20,16 @@ class CreatePeticionsTable extends Migration
             $table->timestamps();
 
             $table->bigInteger("idAlumno")->unsigned();
-            $table->foreign("idAlumno")->references("id")->on("alumnos");
+            $table->foreign("idAlumno")->references("id")->on("alumnos")->onDelete("cascade");
 
             $table->bigInteger("idProfesor")->unsigned();
-            $table->foreign("idProfesor")->references("id")->on("profesors");
+            $table->foreign("idProfesor")->references("id")->on("profesors")->onDelete("cascade");
 
             $table->bigInteger("idMateria")->unsigned();
-            $table->foreign("idMateria")->references("id")->on("materias");
+            $table->foreign("idMateria")->references("id")->on("materias")->onDelete("cascade");
 
             $table->bigInteger("idAsesoria")->nullable()->unsigned();
-            $table->foreign("idAsesoria")->references("id")->on("asesorias");
+            $table->foreign("idAsesoria")->references("id")->on("asesorias")->onDelete("cascade");
         });
 
         DB::update("ALTER TABLE peticions AUTO_INCREMENT = 20191121;");

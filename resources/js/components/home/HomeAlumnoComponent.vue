@@ -182,7 +182,7 @@ export default {
                             estado:"pendiente",
                             tema: this.tema,
                         });
-                        console.log(response);
+                        console.log(response.data);
                         this.materiaSeleccionada = "";
                         this.profesorSeleccionado = "";
                         this.tema = "";
@@ -212,16 +212,22 @@ export default {
                     });
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.log(error.response) || console.log(error);
                 });
         },
 
         deletePeticion(item) {
-            //
-            // corregir
-            //
-            // const index = this.peticionesAsesorias.indexOf(item);
-            // this.peticionesAsesorias.splice(index, 1);
+            const index = this.peticionesAsesorias.indexOf(item);
+            this.peticionesAsesorias.splice(index, 1);
+            let idPeticion = item.idPeticion;
+            axios
+                .delete(`http://ingweb.xgab.com/peticionAsesoria/${idPeticion}`)
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.log(error.response) || console.log(error);
+                });
         },
 
         cancelPeticion() {
