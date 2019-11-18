@@ -2988,6 +2988,7 @@ __webpack_require__.r(__webpack_exports__);
       horaSeleccionada: null,
       tema: "",
       lugar: "",
+      materia: "",
       peticionesSeleccionadas: [],
       headers: [{
         text: "idPeticion",
@@ -3056,6 +3057,7 @@ __webpack_require__.r(__webpack_exports__);
         _this2.peticionesAsesorias.push(e);
       });
       this.peticionesSeleccionadas = [];
+      this.materia = "";
     },
     agendaAsesoria: function agendaAsesoria() {
       var _this3 = this;
@@ -3085,6 +3087,7 @@ __webpack_require__.r(__webpack_exports__);
           _this3.horaSeleccionada = null;
           _this3.dialog = false;
           _this3.peticionesSeleccionadas = [];
+          _this3.materia = "";
         })["catch"](function (error) {
           console.log(error.response) || console.log(error);
         });
@@ -3103,15 +3106,25 @@ __webpack_require__.r(__webpack_exports__);
       var index = this.peticionesSeleccionadas.indexOf(peticionInfo);
       this.peticionesSeleccionadas.splice(index, 1);
       this.peticionesAsesorias.push(peticionInfo);
+
+      if (this.peticionesSeleccionadas.length == 0) {
+        this.materia = "";
+      }
     },
     addAlumno_to_Asesoria: function addAlumno_to_Asesoria(peticionInfo) {
-      if (peticionInfo.estado != "rechazada") {
-        var index = this.peticionesAsesorias.indexOf(peticionInfo);
-        this.peticionesAsesorias.splice(index, 1);
-        this.peticionesSeleccionadas.push(peticionInfo);
-      } // console.log(this.peticionesSeleccionadas);
-      // console.log(this.peticionesSeleccionadas.length);
+      if (this.materia == "") {
+        this.materia = peticionInfo.materia;
+      } else if (this.materia != peticionInfo.materia) {
+        alert("la materia para la asesoria actual es: ".concat(this.materia));
+        return;
+      } // if (peticionInfo.estado != "rechazada") {
 
+
+      var index = this.peticionesAsesorias.indexOf(peticionInfo);
+      this.peticionesAsesorias.splice(index, 1);
+      this.peticionesSeleccionadas.push(peticionInfo); // }
+      // console.log(this.peticionesSeleccionadas);
+      // console.log(this.peticionesSeleccionadas.length);
     }
   },
   created: function created() {

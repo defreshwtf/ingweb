@@ -196,6 +196,7 @@ export default {
             horaSeleccionada: null,
             tema: "",
             lugar: "",
+            materia: "",
             peticionesSeleccionadas: [],
             headers: [
                 {
@@ -250,6 +251,7 @@ export default {
                 this.peticionesAsesorias.push(e);
             });
             this.peticionesSeleccionadas = [];
+            this.materia = "";
         },
         agendaAsesoria() {
             if (this.$refs.formAgendaAsesoria.validate()) {
@@ -283,6 +285,7 @@ export default {
                         this.horaSeleccionada = null;
                         this.dialog = false;
                         this.peticionesSeleccionadas = [];
+                        this.materia = "";
                     })
                     .catch(error => {
                         console.log(error.response) || console.log(error);
@@ -307,13 +310,22 @@ export default {
             let index = this.peticionesSeleccionadas.indexOf(peticionInfo);
             this.peticionesSeleccionadas.splice(index, 1);
             this.peticionesAsesorias.push(peticionInfo);
+            if(this.peticionesSeleccionadas.length == 0){
+                this.materia = "";
+            }
         },
         addAlumno_to_Asesoria(peticionInfo) {
-            if (peticionInfo.estado != "rechazada") {
-                let index = this.peticionesAsesorias.indexOf(peticionInfo);
-                this.peticionesAsesorias.splice(index, 1);
-                this.peticionesSeleccionadas.push(peticionInfo);
+            if(this.materia == ""){
+                this.materia = peticionInfo.materia;
+            } else if(this.materia != peticionInfo.materia){
+                alert(`la materia para la asesoria actual es: ${this.materia}`);
+                return;
             }
+            // if (peticionInfo.estado != "rechazada") {
+            let index = this.peticionesAsesorias.indexOf(peticionInfo);
+            this.peticionesAsesorias.splice(index, 1);
+            this.peticionesSeleccionadas.push(peticionInfo);
+            // }
             // console.log(this.peticionesSeleccionadas);
             // console.log(this.peticionesSeleccionadas.length);
         }
