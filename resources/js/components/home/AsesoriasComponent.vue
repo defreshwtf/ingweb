@@ -17,9 +17,12 @@
                                 <v-container>
                                     <v-card>
                                         <v-card-title>idAsesoria: {{id_profesor}}</v-card-title>
-                                        <v-card-text></v-card-text>
+                                        <v-card-text>
+                                            <v-text-field label="">
+                                            </v-text-field>
+                                        </v-card-text>
                                         <v-card-actions>
-                                            <v-container>
+                                            <!-- <v-container>
                                                 <v-row class="d-flex justify-space-around">
                                                     <v-btn
                                                         @click="saveAsesoria"
@@ -32,7 +35,7 @@
                                                         color="red"
                                                     >Cancel</v-btn>
                                                 </v-row>
-                                            </v-container>
+                                            </v-container> -->
                                         </v-card-actions>
                                     </v-card>
                                 </v-container>
@@ -54,6 +57,7 @@
 </template>
 
 <script>
+import EventBus from '../../app';
 export default {
     props: ["id_profesor"],
     data() {
@@ -73,7 +77,6 @@ export default {
                 { text: "Acciones", value: "action", sortable: false }
             ],
             asesoriasInfo: [],
-            asesoriasInfo_Alumnos: []
         };
     },
     methods: {
@@ -115,6 +118,9 @@ export default {
     },
     created() {
         this.getInfoAsesorias();
+        EventBus.$on("asesoriaAgendada",asesoria => {
+            this.asesoriasInfo.push(asesoria);
+        });
     },
 };
 </script>x

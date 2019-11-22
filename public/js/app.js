@@ -2274,7 +2274,7 @@ __webpack_require__.r(__webpack_exports__);
             window.location.href = _this3.route_home;
           }, 1000);
         })["catch"](function (error) {
-          console.log(error);
+          console.log(error.response.data);
           _this3.overlay = false;
 
           if (error.response.data.errors.email != undefined) {
@@ -2299,6 +2299,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../app */ "./resources/js/app.js");
 //
 //
 //
@@ -2354,6 +2355,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id_profesor"],
   data: function data() {
@@ -2381,8 +2386,7 @@ __webpack_require__.r(__webpack_exports__);
         value: "action",
         sortable: false
       }],
-      asesoriasInfo: [],
-      asesoriasInfo_Alumnos: []
+      asesoriasInfo: []
     };
   },
   methods: {
@@ -2423,7 +2427,12 @@ __webpack_require__.r(__webpack_exports__);
     saveAsesoria: function saveAsesoria(asesoria) {}
   },
   created: function created() {
+    var _this3 = this;
+
     this.getInfoAsesorias();
+    _app__WEBPACK_IMPORTED_MODULE_0__["default"].$on("asesoriaAgendada", function (asesoria) {
+      _this3.asesoriasInfo.push(asesoria);
+    });
   }
 });
 
@@ -2573,11 +2582,43 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["info_profesores_by_materia", "id_alumno"],
   data: function data() {
     return {
       dialog: false,
+      showDialogInfoAsesorias: false,
       headers: [{
         text: "idPeticion",
         align: "left",
@@ -2611,6 +2652,16 @@ __webpack_require__.r(__webpack_exports__);
         },
         maxCaracteres: function maxCaracteres(v) {
           return !!v && v.length <= 50 || "max 50 caracteres";
+        }
+      },
+      infoAsesoria_peticion: {
+        id: "",
+        asesoria: {
+          id: "",
+          tema: "",
+          lugar: "",
+          fecha_hora: "",
+          profesor: ""
         }
       }
     };
@@ -2650,7 +2701,7 @@ __webpack_require__.r(__webpack_exports__);
     getColorEstado: function getColorEstado(estado) {
       if (estado === "pendiente") {
         return "yellow";
-      } else if (estado === "aceptado") {
+      } else if (estado === "aceptada") {
         return "green";
       }
 
@@ -2681,13 +2732,30 @@ __webpack_require__.r(__webpack_exports__);
     cancelPeticion: function cancelPeticion() {
       this.dialog = false;
       this.$refs.formAgendaAsesoria.reset();
+    },
+    mostrarInfoAsesoria: function mostrarInfoAsesoria(item) {
+      var _this3 = this;
+
+      var idPeticion = item.idPeticion;
+      this.showDialogInfoAsesorias = true;
+      axios.get("http://ingweb.xgab.com/peticionAsesoria/".concat(idPeticion)).then(function (response) {
+        console.log(response.data);
+        _this3.infoAsesoria_peticion = response.data; // this.infoAsesoria_peticion.id = peticion.id;
+        // this.infoAsesoria_peticion.asesoria.id = peticion.asesoria.id;
+        // this.infoAsesoria_peticion.asesoria.tema = peticion.asesoria.tema;
+        // this.infoAsesoria_peticion.asesoria.fecha_hora = peticion.asesoria.fecha_hora;
+        // this.infoAsesoria_peticion.asesoria.profesor = peticion.asesoria.profesor;
+        // this.infoAsesoria_peticion.asesoria.lugar = peticion.asesoria.lugar;
+      })["catch"](function (error) {
+        console.log(error.response) || console.log(error);
+      });
     }
   },
   mounted: function mounted() {
-    var _this3 = this;
+    var _this4 = this;
 
     Object.keys(this.info_profesores_by_materia).forEach(function (materia) {
-      _this3.materiasDisponibles.push(materia);
+      _this4.materiasDisponibles.push(materia);
     });
   },
   watch: {},
@@ -2743,6 +2811,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../app */ "./resources/js/app.js");
 //
 //
 //
@@ -2769,13 +2838,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id_profesor"],
   data: function data() {
     return {};
   },
-  methods: {},
+  methods: {
+    asesoriaAgendada1: function asesoriaAgendada1() {
+      console.log("mensaje");
+    }
+  },
   created: function created() {},
   watch: {}
 });
@@ -2791,6 +2864,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../app */ "./resources/js/app.js");
 //
 //
 //
@@ -2975,6 +3049,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id_profesor"],
   data: function data() {
@@ -3027,10 +3102,11 @@ __webpack_require__.r(__webpack_exports__);
     getColorEstado: function getColorEstado(estado) {
       if (estado === "pendiente") {
         return "yellow";
-      } else if (estado === "aceptado") {
+      } else if (estado === "aceptada") {
         return "green";
       }
 
+      console.log(estado);
       return "red";
     },
     getInfoPeticiones: function getInfoPeticiones() {
@@ -3073,14 +3149,13 @@ __webpack_require__.r(__webpack_exports__);
           var idAsesoria = response.data.idAsesoria;
           var materia = response.data.materia; // console.log(response.data);
 
-          _this3.$emit("asesoriaAgendada", {
+          _app__WEBPACK_IMPORTED_MODULE_0__["default"].$emit("asesoriaAgendada", {
             idAsesoria: idAsesoria,
             materia: materia,
             tema: _this3.tema,
             fecha_hora: _this3.fechaSeleccionada + " " + _this3.horaSeleccionada,
             lugar: _this3.lugar
           });
-
           _this3.tema = "";
           _this3.lugar = "";
           _this3.fechaSeleccionada = new Date().toISOString().substr(0, 10);
@@ -56869,59 +56944,17 @@ var render = function() {
                                           )
                                         ]),
                                         _vm._v(" "),
-                                        _c("v-card-text"),
-                                        _vm._v(" "),
                                         _c(
-                                          "v-card-actions",
+                                          "v-card-text",
                                           [
-                                            _c(
-                                              "v-container",
-                                              [
-                                                _c(
-                                                  "v-row",
-                                                  {
-                                                    staticClass:
-                                                      "d-flex justify-space-around"
-                                                  },
-                                                  [
-                                                    _c(
-                                                      "v-btn",
-                                                      {
-                                                        attrs: {
-                                                          outlined: "",
-                                                          color: "green"
-                                                        },
-                                                        on: {
-                                                          click:
-                                                            _vm.saveAsesoria
-                                                        }
-                                                      },
-                                                      [_vm._v("guardar")]
-                                                    ),
-                                                    _vm._v(" "),
-                                                    _c(
-                                                      "v-btn",
-                                                      {
-                                                        attrs: {
-                                                          outlined: "",
-                                                          color: "red"
-                                                        },
-                                                        on: {
-                                                          click:
-                                                            _vm.cancelEditAsesoria
-                                                        }
-                                                      },
-                                                      [_vm._v("Cancel")]
-                                                    )
-                                                  ],
-                                                  1
-                                                )
-                                              ],
-                                              1
-                                            )
+                                            _c("v-text-field", {
+                                              attrs: { label: "" }
+                                            })
                                           ],
                                           1
-                                        )
+                                        ),
+                                        _vm._v(" "),
+                                        _c("v-card-actions")
                                       ],
                                       1
                                     )
@@ -57291,6 +57324,129 @@ var render = function() {
                                 )
                               ],
                               1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "v-dialog",
+                              {
+                                attrs: { "max-width": "500px" },
+                                model: {
+                                  value: _vm.showDialogInfoAsesorias,
+                                  callback: function($$v) {
+                                    _vm.showDialogInfoAsesorias = $$v
+                                  },
+                                  expression: "showDialogInfoAsesorias"
+                                }
+                              },
+                              [
+                                _c(
+                                  "v-card",
+                                  [
+                                    _c("v-card-title", [
+                                      _vm._v(
+                                        "idAsesoria: " +
+                                          _vm._s(_vm.infoAsesoria_peticion.id)
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-container",
+                                      [
+                                        _c("v-text-field", {
+                                          attrs: {
+                                            label: "tema",
+                                            disabled: ""
+                                          },
+                                          model: {
+                                            value:
+                                              _vm.infoAsesoria_peticion.asesoria
+                                                .tema,
+                                            callback: function($$v) {
+                                              _vm.$set(
+                                                _vm.infoAsesoria_peticion
+                                                  .asesoria,
+                                                "tema",
+                                                $$v
+                                              )
+                                            },
+                                            expression:
+                                              "infoAsesoria_peticion.asesoria.tema"
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("v-text-field", {
+                                          attrs: {
+                                            label: "lugar",
+                                            disabled: ""
+                                          },
+                                          model: {
+                                            value:
+                                              _vm.infoAsesoria_peticion.asesoria
+                                                .lugar,
+                                            callback: function($$v) {
+                                              _vm.$set(
+                                                _vm.infoAsesoria_peticion
+                                                  .asesoria,
+                                                "lugar",
+                                                $$v
+                                              )
+                                            },
+                                            expression:
+                                              "infoAsesoria_peticion.asesoria.lugar"
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("v-text-field", {
+                                          attrs: {
+                                            label: "fecha - hora",
+                                            disabled: ""
+                                          },
+                                          model: {
+                                            value:
+                                              _vm.infoAsesoria_peticion.asesoria
+                                                .fecha_hora,
+                                            callback: function($$v) {
+                                              _vm.$set(
+                                                _vm.infoAsesoria_peticion
+                                                  .asesoria,
+                                                "fecha_hora",
+                                                $$v
+                                              )
+                                            },
+                                            expression:
+                                              "infoAsesoria_peticion.asesoria.fecha_hora"
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("v-text-field", {
+                                          attrs: {
+                                            label: "profesor",
+                                            disabled: ""
+                                          },
+                                          model: {
+                                            value:
+                                              _vm.infoAsesoria_peticion.asesoria
+                                                .profesor,
+                                            callback: function($$v) {
+                                              _vm.$set(
+                                                _vm.infoAsesoria_peticion
+                                                  .asesoria,
+                                                "profesor",
+                                                $$v
+                                              )
+                                            },
+                                            expression:
+                                              "infoAsesoria_peticion.asesoria.profesor"
+                                          }
+                                        })
+                                      ],
+                                      1
+                                    )
+                                  ],
+                                  1
+                                )
+                              ],
+                              1
                             )
                           ],
                           1
@@ -57317,6 +57473,20 @@ var render = function() {
                     fn: function(ref) {
                       var item = ref.item
                       return [
+                        item.estado == "aceptada"
+                          ? _c(
+                              "v-icon",
+                              {
+                                on: {
+                                  click: function($event) {
+                                    return _vm.mostrarInfoAsesoria(item)
+                                  }
+                                }
+                              },
+                              [_vm._v("info")]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
                         _c(
                           "v-icon",
                           {
@@ -57471,11 +57641,7 @@ var render = function() {
             attrs: { id_profesor: _vm.id_profesor }
           }),
           _vm._v(" "),
-          _c("asesorias-component", {
-            attrs: { id_profesor: _vm.id_profesor }
-          }),
-          _vm._v(" "),
-          _c("a", { on: { asesoriaAgendada: true } })
+          _c("asesorias-component", { attrs: { id_profesor: _vm.id_profesor } })
         ],
         1
       )
@@ -107747,7 +107913,7 @@ module.exports = function(module) {
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
   \*****************************/
-/*! no exports provided */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -107792,6 +107958,8 @@ Vue.component('footer-component', __webpack_require__(/*! ./components/FooterCom
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+var bus = new Vue();
+/* harmony default export */ __webpack_exports__["default"] = (bus);
 var app = new Vue({
   el: '#app',
   vuetify: new vuetify__WEBPACK_IMPORTED_MODULE_0___default.a({})

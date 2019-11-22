@@ -24,6 +24,7 @@ Route::resource('peticionAsesoria', 'PeticionAsesoriaController')
     "store",
     "index",
     "edit",
+    "show",
     "destroy"
 ]);
 Route::resource('asesorias', 'AsesoriasController')

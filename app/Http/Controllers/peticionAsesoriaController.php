@@ -25,7 +25,7 @@ class PeticionAsesoriaController extends Controller
         if (is_null($profesor)) {
             $alumno = Auth::user()->alumno;
 
-            $peticions = $alumno->peticions->where("estado", "!=", "aceptada");
+            $peticions = $alumno->peticions;
             $info = [];
             foreach ($peticions as $peticion) {
                 $infoTemp = [];
@@ -98,6 +98,18 @@ class PeticionAsesoriaController extends Controller
      */
     public function show($id)
     {
+        $peticion = Peticion::where("id", $id)->first();
+        $asesoria = $peticion->asesoria;
+
+        $peticionInfo = [];
+        $peticionInfo["asesoria"]["id"] = $asesoria->id;
+        $peticionInfo["asesoria"]["fecha_hora"] = $asesoria->fecha_hora;
+        $peticionInfo["asesoria"]["tema"] = $asesoria->tema;
+        $peticionInfo["asesoria"]["lugar"] = $asesoria->lugar;
+        $peticionInfo["asesoria"]["profesor"] = $asesoria->profesor->user->name;
+        $peticionInfo["id"] = $peticion->id;
+
+        return response()->json($peticionInfo, 200);
     }
 
     /**

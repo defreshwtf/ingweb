@@ -119,12 +119,43 @@
                                     </v-container>
                                 </v-card>
                             </v-dialog>
+                            <v-dialog v-model="showDialogInfoAsesorias" max-width="500px">
+                                <v-card>
+                                    <v-card-title>idAsesoria: {{infoAsesoria_peticion.id}}</v-card-title>
+                                    <v-container>
+                                        <v-text-field
+                                            label="tema"
+                                            disabled
+                                            v-model="infoAsesoria_peticion.asesoria.tema"
+                                        ></v-text-field>
+                                        <v-text-field
+                                            label="lugar"
+                                            disabled
+                                            v-model="infoAsesoria_peticion.asesoria.lugar"
+                                        ></v-text-field>
+                                        <v-text-field
+                                            label="fecha - hora"
+                                            disabled
+                                            v-model="infoAsesoria_peticion.asesoria.fecha_hora"
+                                        ></v-text-field>
+                                        <v-text-field
+                                            label="profesor"
+                                            disabled
+                                            v-model="infoAsesoria_peticion.asesoria.profesor"
+                                        ></v-text-field>
+                                    </v-container>
+                                </v-card>
+                            </v-dialog>
                         </v-toolbar>
                     </template>
                     <template #item.estado="{ item }">
                         <v-chip :color="getColorEstado(item.estado)">{{ item.estado }}</v-chip>
                     </template>
                     <template #item.action="{ item }">
+                        <v-icon
+                            v-if="item.estado == 'aceptada'"
+                            @click="mostrarInfoAsesoria(item)"
+                        >info</v-icon>
                         <v-icon @click="deletePeticion(item)">delete</v-icon>
                     </template>
                 </v-data-table>
@@ -139,6 +170,7 @@ export default {
     data() {
         return {
             dialog: false,
+            showDialogInfoAsesorias: false,
             headers: [
                 {
                     text: "idPeticion",
@@ -161,6 +193,16 @@ export default {
                 requerid: v => !!v || "campo requerido",
                 maxCaracteres: v =>
                     (!!v && v.length <= 50) || "max 50 caracteres"
+            },
+            infoAsesoria_peticion: {
+                id: "",
+                asesoria: {
+                    id: "",
+                    tema: "",
+                    lugar: "",
+                    fecha_hora: "",
+                    profesor: ""
+                }
             }
         };
     },
@@ -172,15 +214,15 @@ export default {
                         idAlumno: this.id_alumno,
                         nomMateria: this.materiaSeleccionada,
                         nomProfesor: this.profesorSeleccionado,
-                        tema:this.tema,
+                        tema: this.tema
                     })
                     .then(response => {
                         this.peticionesAsesorias.push({
                             idPeticion: response.data.idPeticion,
                             materia: this.materiaSeleccionada,
                             profesor: this.profesorSeleccionado,
-                            estado:"pendiente",
-                            tema: this.tema,
+                            estado: "pendiente",
+                            tema: this.tema
                         });
                         console.log(response.data);
                         this.materiaSeleccionada = "";
@@ -194,10 +236,10 @@ export default {
                     });
             }
         },
-        getColorEstado(estado){
-            if(estado === "pendiente"){
+        getColorEstado(estado) {
+            if (estado === "pendiente") {
                 return "yellow";
-            } else if(estado === "aceptado"){
+            } else if (estado === "aceptada") {
                 return "green";
             }
             return "red";
@@ -205,9 +247,9 @@ export default {
         getInfoPeticiones() {
             axios
                 .get("http://ingweb.xgab.com/peticionAsesoria")
-                .then(response =>{
+                .then(response => {
                     console.log(response.data);
-                    response.data.forEach(e=>{
+                    response.data.forEach(e => {
                         this.peticionesAsesorias.push(e);
                     });
                 })
@@ -233,6 +275,26 @@ export default {
         cancelPeticion() {
             this.dialog = false;
             this.$refs.formAgendaAsesoria.reset();
+        },
+        mostrarInfoAsesoria(item) {
+            let idPeticion = item.idPeticion;
+            this.showDialogInfoAsesorias = true;
+            axios
+                .get(`http://ingweb.xgab.com/peticionAsesoria/${idPeticion}`)
+                .then(response => {
+                    console.log(response.data);
+                    this.infoAsesoria_peticion = response.data;
+
+                    // this.infoAsesoria_peticion.id = peticion.id;
+                    // this.infoAsesoria_peticion.asesoria.id = peticion.asesoria.id;
+                    // this.infoAsesoria_peticion.asesoria.tema = peticion.asesoria.tema;
+                    // this.infoAsesoria_peticion.asesoria.fecha_hora = peticion.asesoria.fecha_hora;
+                    // this.infoAsesoria_peticion.asesoria.profesor = peticion.asesoria.profesor;
+                    // this.infoAsesoria_peticion.asesoria.lugar = peticion.asesoria.lugar;
+                })
+                .catch(error => {
+                    console.log(error.response) || console.log(error);
+                });
         }
     },
     mounted() {

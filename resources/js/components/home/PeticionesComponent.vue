@@ -183,6 +183,7 @@
 </template>
 
 <script>
+import EventBus from '../../app';
 export default {
     props: ["id_profesor"],
     data() {
@@ -223,9 +224,10 @@ export default {
         getColorEstado(estado) {
             if (estado === "pendiente") {
                 return "yellow";
-            } else if (estado === "aceptado") {
+            } else if (estado === "aceptada") {
                 return "green";
             }
+            console.log(estado);
             return "red";
         },
         getInfoPeticiones() {
@@ -267,7 +269,7 @@ export default {
                         let idAsesoria = response.data.idAsesoria;
                         let materia = response.data.materia;
                         // console.log(response.data);
-                        this.$emit("asesoriaAgendada", {
+                        EventBus.$emit("asesoriaAgendada", {
                             idAsesoria: idAsesoria,
                             materia: materia,
                             tema: this.tema,
