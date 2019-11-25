@@ -14,6 +14,7 @@ class Alumno extends Model
     protected $fillable = [
         'idUser'
     ];
+    
     public function user()
     {
         return $this->belongsTo("App\User","idUser");

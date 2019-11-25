@@ -2094,6 +2094,7 @@ __webpack_require__.r(__webpack_exports__);
             window.location.href = _this2.route_home;
           }, 1000);
         })["catch"](function (error) {
+          console.log(error.response) || console.log(error);
           _this2.auth_error = error.response.data.errors["email"][0];
           _this2.overlay = false;
 
@@ -2214,6 +2215,9 @@ __webpack_require__.r(__webpack_exports__);
         },
         max: function max(v) {
           return !!v && v.length <= 20 || "max 20 caracteres";
+        },
+        min: function min(v) {
+          return !!v && v.length >= 8 || "min 8 caracteres";
         },
         email: function email(v) {
           return /^[\w|\.]+@[\w|\.]+$/.test(v) || "ingresa un email valido";
@@ -2350,20 +2354,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id_profesor"],
   data: function data() {
     return {
       showDialog_infoAsesoria: false,
+      asesoriaInfo_Dialog: {},
+      headersPeticions_Asesoria: [{
+        text: "ID Peticion",
+        align: "left",
+        sortable: false,
+        value: "idPeticion"
+      }, {
+        text: "ID Alumno",
+        value: "idAlumno"
+      }, {
+        text: "Nombre Alumno",
+        value: "nombreAlumno"
+      }, {
+        text: "Tema Propuesto",
+        value: "tema"
+      }, {
+        text: "Acciones",
+        value: "acciones"
+      }],
+      peticionsInfo_Asesoria: [],
       headersAsesorias: [{
         text: "idAsesoria",
         align: "left",
@@ -2382,6 +2398,9 @@ __webpack_require__.r(__webpack_exports__);
         text: "Lugar",
         value: "lugar"
       }, {
+        text: "#Peticiones",
+        value: "numPeticiones"
+      }, {
         text: "Acciones",
         value: "action",
         sortable: false
@@ -2390,35 +2409,54 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    catchEvent_asesoriaAgendada: function catchEvent_asesoriaAgendada(asesoriaInfo) {
-      this.asesoriasInfo.push(asesoriaInfo);
-      console.log("asesoria agendada correctamente!!!");
-    },
     getInfoAsesorias: function getInfoAsesorias() {
       var _this = this;
 
       axios.get("http://ingweb.xgab.com/asesorias").then(function (response) {
-        // console.log(response.data);
-        response.data.forEach(function (e) {
-          _this.asesoriasInfo.push(e);
-        });
+        console.log(response.data);
+        _this.asesoriasInfo = response.data; // response.data.forEach(e => {
+        //     this.asesoriasInfo.push(e);
+        // });
       })["catch"](function (error) {
         console.log(error.response) || console.log(error);
       });
     },
     showMoreInfo_Asesoria: function showMoreInfo_Asesoria(asesoria) {
-      this.showDialog_infoAsesoria = true;
+      var _this2 = this;
+
+      var idAsesoria = asesoria.idAsesoria;
+      axios.get("http://ingweb.xgab.com/asesoria/peticiones/".concat(idAsesoria)).then(function (response) {
+        console.log(response.data);
+        _this2.asesoriaInfo_Dialog = asesoria;
+        _this2.peticionsInfo_Asesoria = response.data;
+        _this2.showDialog_infoAsesoria = true;
+      })["catch"](function (error) {
+        console.log(error.response) || console.log(error);
+      });
     },
     deleteAsesoria: function deleteAsesoria(asesoria) {
-      var _this2 = this;
+      var _this3 = this;
 
       var idAsesoria = asesoria.idAsesoria;
       axios["delete"]("http://ingweb.xgab.com/asesorias/" + idAsesoria).then(function (response) {
         console.log(response.data);
 
-        var index = _this2.asesoriasInfo.indexOf(asesoria);
+        var index = _this3.asesoriasInfo.indexOf(asesoria);
 
-        _this2.asesoriasInfo.splice(index, 1);
+        _this3.asesoriasInfo.splice(index, 1);
+      })["catch"](function (error) {
+        console.log(error.response) || console.log(error);
+      });
+    },
+    eliminarPeticion_en_Asesoria: function eliminarPeticion_en_Asesoria(peticionInfo) {
+      var _this4 = this;
+
+      axios.get("http://ingweb.xgab.com/asesoria/eliminaPeticion/".concat(peticionInfo.idPeticion)).then(function (response) {
+        console.log(response.data);
+
+        var index = _this4.peticionsInfo_Asesoria.indexOf(peticionInfo);
+
+        _this4.peticionsInfo_Asesoria.splice(index, 1);
       })["catch"](function (error) {
         console.log(error.response) || console.log(error);
       });
@@ -2427,12 +2465,145 @@ __webpack_require__.r(__webpack_exports__);
     saveAsesoria: function saveAsesoria(asesoria) {}
   },
   created: function created() {
-    var _this3 = this;
+    var _this5 = this;
 
     this.getInfoAsesorias();
     _app__WEBPACK_IMPORTED_MODULE_0__["default"].$on("asesoriaAgendada", function (asesoria) {
-      _this3.asesoriasInfo.push(asesoria);
+      _this5.asesoriasInfo.push(asesoria);
     });
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/home/HomeAdministradorComponent.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/home/HomeAdministradorComponent.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["administrador"],
+  data: function data() {
+    return {
+      headers: [{
+        text: "ID Profesor",
+        sortable: false,
+        value: "idProfesor"
+      }, {
+        text: "Nombre",
+        value: "nombre"
+      }, {
+        text: "Estado",
+        value: "estado"
+      }, {
+        text: "Acciones",
+        value: "action"
+      }],
+      profesoresinfo: []
+    };
+  },
+  methods: {
+    getInfoProfesores: function getInfoProfesores() {
+      var _this = this;
+
+      axios.get("http://ingweb.xgab.com/profesores").then(function (response) {
+        console.log(response.data);
+        _this.profesoresinfo = response.data;
+      })["catch"](function (error) {
+        console.log(error.response) || console.log(error);
+      });
+    },
+    getColorEstado: function getColorEstado(estado) {
+      if (estado === "pendiente") {
+        return "yellow";
+      } else if (estado === "aceptado") {
+        return "green";
+      }
+
+      return "red";
+    },
+    setEstadoProfesor: function setEstadoProfesor(profesor, estado) {
+      axios.put("http://ingweb.xgab.com/profesores/".concat(profesor.idProfesor), {
+        estado: estado
+      }).then(function (response) {
+        console.log(response.data);
+        var profesorNew = response.data;
+        profesor.estado = profesorNew.estado;
+      })["catch"](function (error) {
+        console.log(error.response) || console.log(error);
+      });
+    }
+  },
+  created: function created() {
+    this.getInfoProfesores();
   }
 });
 
@@ -2576,45 +2747,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["info_profesores_by_materia", "id_alumno"],
+  props: ["alumno"],
   data: function data() {
     return {
       dialog: false,
@@ -2643,6 +2777,11 @@ __webpack_require__.r(__webpack_exports__);
       }],
       peticionesAsesorias: [],
       materiasDisponibles: [],
+      materiasDisponiblesInfo: {},
+      profesoresDisponibles: [],
+      profesoresDisponiblesInfo: {},
+      filtrosDisponibles: ["Materia", "Profesor"],
+      filtroSeleccionado: "",
       materiaSeleccionada: "",
       profesorSeleccionado: "",
       tema: "",
@@ -2672,7 +2811,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (this.$refs.formAgendaAsesoria.validate()) {
         axios.post("http://ingweb.xgab.com/peticionAsesoria", {
-          idAlumno: this.id_alumno,
+          idAlumno: this.alumno.id,
           nomMateria: this.materiaSeleccionada,
           nomProfesor: this.profesorSeleccionado,
           tema: this.tema
@@ -2751,14 +2890,63 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
   },
-  mounted: function mounted() {
-    var _this4 = this;
+  mounted: function mounted() {},
+  watch: {
+    filtroSeleccionado: function filtroSeleccionado(filtro) {
+      var _this4 = this;
 
-    Object.keys(this.info_profesores_by_materia).forEach(function (materia) {
-      _this4.materiasDisponibles.push(materia);
-    });
+      this.profesoresDisponibles = [];
+      this.materiasDisponibles = [];
+
+      if (filtro == "Profesor") {
+        axios.get("http://ingweb.xgab.com/profesoresAceptados").then(function (response) {
+          console.log(response.data);
+          _this4.profesoresDisponibles = Object.keys(response.data);
+          _this4.profesoresDisponiblesInfo = response.data;
+
+          if (_this4.profesoresDisponibles.length == 1) {
+            _this4.materiasDisponibles = _this4.profesoresDisponiblesInfo[_this4.profesoresDisponibles[0]];
+          } else {
+            _this4.materiasDisponibles = [];
+          }
+        })["catch"](function (error) {
+          console.log(error.response) || console.log(error);
+        });
+      } else {
+        axios.get("http://ingweb.xgab.com/materiasConProfesoresAceptados").then(function (response) {
+          console.log(response.data);
+          _this4.materiasDisponibles = Object.keys(response.data);
+          _this4.materiasDisponiblesInfo = response.data;
+
+          if (_this4.materiasDisponibles.length == 1) {
+            _this4.profesoresDisponibles = _this4.materiasDisponiblesInfo[_this4.materiasDisponibles[0]];
+          } else {
+            _this4.profesoresDisponibles = [];
+          }
+        })["catch"](function (error) {
+          console.log(error.response) || console.log(error);
+        });
+      }
+    },
+    materiaSeleccionada: function materiaSeleccionada(v) {
+      if (v != "") {
+        if (this.profesoresDisponibles.length == 0) {
+          this.profesoresDisponibles = this.materiasDisponiblesInfo[v];
+        }
+      } else {
+        console.log("vacio");
+      }
+    },
+    profesorSeleccionado: function profesorSeleccionado(v) {
+      if (v != "") {
+        if (this.materiasDisponibles.length == 0) {
+          this.materiasDisponibles = this.profesoresDisponiblesInfo[v];
+        }
+      } else {
+        console.log("vacio");
+      }
+    }
   },
-  watch: {},
   created: function created() {
     this.getInfoPeticiones();
   }
@@ -2791,8 +2979,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["app_name", "tipo_usuario", "id_tipo_usuario", "info_profesores_by_materia"],
+  props: ["app_name", "tipo_usuario", "info_tipo_usuario"],
   data: function data() {
     return {};
   },
@@ -2838,18 +3030,44 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["id_profesor"],
+  props: ["profesor"],
   data: function data() {
-    return {};
+    return {
+      estadoProfesor: "rechazado"
+    };
   },
   methods: {
-    asesoriaAgendada1: function asesoriaAgendada1() {
-      console.log("mensaje");
+    verificaEstadoProfesor: function verificaEstadoProfesor() {
+      var _this = this;
+
+      axios.get("http://ingweb.xgab.com/profesores/".concat(this.profesor.id)).then(function (response) {
+        console.log(response.data);
+        _this.profesor.estado = response.data.estado;
+        _this.estadoProfesor = _this.profesor.estado;
+      })["catch"](function (error) {
+        console.log(error.response) || console.log(error);
+      });
     }
   },
-  created: function created() {},
+  created: function created() {
+    setInterval(this.verificaEstadoProfesor, 20000);
+  },
   watch: {}
 });
 
@@ -2865,6 +3083,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../app */ "./resources/js/app.js");
+//
+//
 //
 //
 //
@@ -3106,7 +3326,6 @@ __webpack_require__.r(__webpack_exports__);
         return "green";
       }
 
-      console.log(estado);
       return "red";
     },
     getInfoPeticiones: function getInfoPeticiones() {
@@ -3114,9 +3333,9 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get("http://ingweb.xgab.com/peticionAsesoria").then(function (response) {
         // console.log(response.data);
-        response.data.forEach(function (e) {
-          _this.peticionesAsesorias.push(e);
-        });
+        _this.peticionesAsesorias = response.data; // response.data.forEach(e => {
+        //     this.peticionesAsesorias.push(e);
+        // });
       })["catch"](function (error) {
         console.log(error.response) || console.log(error);
       });
@@ -56727,7 +56946,8 @@ var render = function() {
                                       label: "password",
                                       rules: [
                                         _vm.rules.requerid,
-                                        _vm.rules.espaciosBlanco
+                                        _vm.rules.espaciosBlanco,
+                                        _vm.rules.min
                                       ],
                                       counter: "",
                                       type: "password"
@@ -56909,7 +57129,20 @@ var render = function() {
                           "v-toolbar",
                           { attrs: { flat: "", color: "white" } },
                           [
-                            _c("v-toolbar-title", [_vm._v("Asesorias")]),
+                            _c(
+                              "v-toolbar-title",
+                              [
+                                _c(
+                                  "v-btn",
+                                  {
+                                    attrs: { outlined: "", color: "green" },
+                                    on: { click: _vm.getInfoAsesorias }
+                                  },
+                                  [_vm._v("Asesorias")]
+                                )
+                              ],
+                              1
+                            ),
                             _vm._v(" "),
                             _c("v-divider", {
                               staticClass: "mx-4",
@@ -56940,21 +57173,57 @@ var render = function() {
                                         _c("v-card-title", [
                                           _vm._v(
                                             "idAsesoria: " +
-                                              _vm._s(_vm.id_profesor)
+                                              _vm._s(
+                                                _vm.asesoriaInfo_Dialog
+                                                  .idAsesoria
+                                              )
                                           )
                                         ]),
                                         _vm._v(" "),
                                         _c(
                                           "v-card-text",
                                           [
-                                            _c("v-text-field", {
-                                              attrs: { label: "" }
+                                            _c("v-data-table", {
+                                              attrs: {
+                                                headers:
+                                                  _vm.headersPeticions_Asesoria,
+                                                items:
+                                                  _vm.peticionsInfo_Asesoria,
+                                                "sort-by": "idPeticion"
+                                              },
+                                              scopedSlots: _vm._u([
+                                                {
+                                                  key: "item.acciones",
+                                                  fn: function(ref) {
+                                                    var item = ref.item
+                                                    return [
+                                                      _c(
+                                                        "v-icon",
+                                                        {
+                                                          attrs: {
+                                                            title:
+                                                              "elimina peticion de la asesoria"
+                                                          },
+                                                          on: {
+                                                            click: function(
+                                                              $event
+                                                            ) {
+                                                              return _vm.eliminarPeticion_en_Asesoria(
+                                                                item
+                                                              )
+                                                            }
+                                                          }
+                                                        },
+                                                        [_vm._v("delete")]
+                                                      )
+                                                    ]
+                                                  }
+                                                }
+                                              ])
                                             })
                                           ],
                                           1
-                                        ),
-                                        _vm._v(" "),
-                                        _c("v-card-actions")
+                                        )
                                       ],
                                       1
                                     )
@@ -57007,10 +57276,215 @@ var render = function() {
                     }
                   }
                 ])
-              }),
-              _vm._v(" "),
-              _c("a", {
-                on: { asesoriaAgendada: _vm.catchEvent_asesoriaAgendada }
+              })
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/home/HomeAdministradorComponent.vue?vue&type=template&id=cbcde658&":
+/*!**********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/home/HomeAdministradorComponent.vue?vue&type=template&id=cbcde658& ***!
+  \**********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c(
+        "v-row",
+        [
+          _c(
+            "v-col",
+            { attrs: { cols: "12" } },
+            [
+              _c(
+                "v-card",
+                [
+                  _c("v-card-title", [_vm._v("Administrar Profesores")]),
+                  _vm._v(" "),
+                  _c("v-card-text", [
+                    _vm._v(
+                      "\n                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo provident quisquam nostrum voluptatibus laboriosam fugit molestias itaque, ea earum repudiandae hic, aspernatur rem at vero nemo nesciunt tenetur enim necessitatibus!\n                "
+                    )
+                  ])
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-col",
+            { attrs: { cols: "12" } },
+            [
+              _c("v-data-table", {
+                staticClass: "elevation-1",
+                attrs: {
+                  headers: _vm.headers,
+                  items: _vm.profesoresinfo,
+                  "sort-by": "materia"
+                },
+                scopedSlots: _vm._u([
+                  {
+                    key: "top",
+                    fn: function() {
+                      return [
+                        _c(
+                          "v-toolbar",
+                          { attrs: { flat: "", color: "white" } },
+                          [
+                            _c(
+                              "v-toolbar-title",
+                              [
+                                _c(
+                                  "v-btn",
+                                  {
+                                    attrs: { outlined: "", color: "green" },
+                                    on: { click: _vm.getInfoProfesores }
+                                  },
+                                  [_vm._v("Administrar Profesores")]
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c("v-divider", {
+                              staticClass: "mx-4",
+                              attrs: { inset: "", vertical: "" }
+                            }),
+                            _vm._v(" "),
+                            _c("v-spacer")
+                          ],
+                          1
+                        )
+                      ]
+                    },
+                    proxy: true
+                  },
+                  {
+                    key: "item.estado",
+                    fn: function(ref) {
+                      var item = ref.item
+                      return [
+                        _c(
+                          "v-chip",
+                          { attrs: { color: _vm.getColorEstado(item.estado) } },
+                          [_vm._v(_vm._s(item.estado))]
+                        )
+                      ]
+                    }
+                  },
+                  {
+                    key: "item.action",
+                    fn: function(ref) {
+                      var item = ref.item
+                      return [
+                        _c("v-icon", [_vm._v("info")]),
+                        _vm._v(" "),
+                        item.estado == "pendiente"
+                          ? _c(
+                              "v-icon",
+                              {
+                                attrs: { title: "aceptar al profesor" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.setEstadoProfesor(
+                                      item,
+                                      "aceptado"
+                                    )
+                                  }
+                                }
+                              },
+                              [_vm._v("add_box")]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        item.estado == "rechazado"
+                          ? _c(
+                              "v-icon",
+                              {
+                                attrs: {
+                                  title:
+                                    "cambiar el estado del profesor a aceptado"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.setEstadoProfesor(
+                                      item,
+                                      "aceptado"
+                                    )
+                                  }
+                                }
+                              },
+                              [_vm._v("add_box")]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        item.estado == "pendiente"
+                          ? _c(
+                              "v-icon",
+                              {
+                                attrs: { title: "rechaza al profesor" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.setEstadoProfesor(
+                                      item,
+                                      "rechazado"
+                                    )
+                                  }
+                                }
+                              },
+                              [_vm._v("backspace")]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        item.estado == "aceptado"
+                          ? _c(
+                              "v-icon",
+                              {
+                                attrs: {
+                                  title:
+                                    "cambiar el estado del profesor a rechazado"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.setEstadoProfesor(
+                                      item,
+                                      "rechazado"
+                                    )
+                                  }
+                                }
+                              },
+                              [_vm._v("backspace")]
+                            )
+                          : _vm._e()
+                      ]
+                    }
+                  }
+                ])
               })
             ],
             1
@@ -57144,7 +57618,7 @@ var render = function() {
                                   [
                                     _c("v-card-title", [
                                       _vm._v(
-                                        "idAlumno: " + _vm._s(_vm.id_alumno)
+                                        "idAlumno: " + _vm._s(_vm.alumno.id)
                                       )
                                     ]),
                                     _vm._v(" "),
@@ -57180,6 +57654,26 @@ var render = function() {
                                                       "v-col",
                                                       { attrs: { cols: 8 } },
                                                       [
+                                                        _c("v-select", {
+                                                          attrs: {
+                                                            label:
+                                                              "selecciona filtro",
+                                                            items:
+                                                              _vm.filtrosDisponibles
+                                                          },
+                                                          model: {
+                                                            value:
+                                                              _vm.filtroSeleccionado,
+                                                            callback: function(
+                                                              $$v
+                                                            ) {
+                                                              _vm.filtroSeleccionado = $$v
+                                                            },
+                                                            expression:
+                                                              "filtroSeleccionado"
+                                                          }
+                                                        }),
+                                                        _vm._v(" "),
                                                         _c("v-autocomplete", {
                                                           attrs: {
                                                             rules: [
@@ -57213,11 +57707,7 @@ var render = function() {
                                                             ],
                                                             label: "profesor",
                                                             items:
-                                                              _vm
-                                                                .info_profesores_by_materia[
-                                                                _vm
-                                                                  .materiaSeleccionada
-                                                              ]
+                                                              _vm.profesoresDisponibles
                                                           },
                                                           model: {
                                                             value:
@@ -57544,13 +58034,14 @@ var render = function() {
         [
           _vm.tipo_usuario == "Profesor"
             ? _c("home-profesor-component", {
-                attrs: { id_profesor: _vm.id_tipo_usuario }
+                attrs: { profesor: _vm.info_tipo_usuario }
               })
-            : _c("home-alumno-component", {
-                attrs: {
-                  info_profesores_by_materia: _vm.info_profesores_by_materia,
-                  id_alumno: _vm.id_tipo_usuario
-                }
+            : _vm.tipo_usuario == "Alumno"
+            ? _c("home-alumno-component", {
+                attrs: { alumno: _vm.info_tipo_usuario }
+              })
+            : _c("home-administrador-component", {
+                attrs: { administrador: _vm.info_tipo_usuario }
               })
         ],
         1
@@ -57637,11 +58128,62 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _c("peticiones-component", {
-            attrs: { id_profesor: _vm.id_profesor }
-          }),
-          _vm._v(" "),
-          _c("asesorias-component", { attrs: { id_profesor: _vm.id_profesor } })
+          _vm.estadoProfesor == "rechazado"
+            ? _c(
+                "v-row",
+                { attrs: { justify: "center" } },
+                [
+                  _c("v-col", { attrs: { cols: "6" } }, [
+                    _vm._v(
+                      "\n                actualmente su estado es: " +
+                        _vm._s(_vm.estadoProfesor) +
+                        "\n            "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "v-col",
+                    { attrs: { cols: "3" } },
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { outlined: "", color: "green" },
+                          on: { click: _vm.verificaEstadoProfesor }
+                        },
+                        [_vm._v("verificar estado")]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            : _c(
+                "v-row",
+                [
+                  _c(
+                    "v-col",
+                    [
+                      _c("peticiones-component", {
+                        attrs: { id_profesor: _vm.profesor.id }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-col",
+                    [
+                      _c("asesorias-component", {
+                        attrs: { id_profesor: _vm.profesor.id }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
         ],
         1
       )
@@ -57697,7 +58239,20 @@ var render = function() {
                           "v-toolbar",
                           { attrs: { flat: "", color: "white" } },
                           [
-                            _c("v-toolbar-title", [_vm._v("Peticiones")]),
+                            _c(
+                              "v-toolbar-title",
+                              [
+                                _c(
+                                  "v-btn",
+                                  {
+                                    attrs: { outlined: "", color: "green" },
+                                    on: { click: _vm.getInfoPeticiones }
+                                  },
+                                  [_vm._v("Peticiones")]
+                                )
+                              ],
+                              1
+                            ),
                             _vm._v(" "),
                             _c("v-divider", {
                               staticClass: "mx-4",
@@ -107945,6 +108500,7 @@ Vue.use(vuetify__WEBPACK_IMPORTED_MODULE_0___default.a);
 Vue.component('home-component', __webpack_require__(/*! ./components/home/HomeComponent.vue */ "./resources/js/components/home/HomeComponent.vue")["default"]);
 Vue.component('home-profesor-component', __webpack_require__(/*! ./components/home/HomeProfesorComponent.vue */ "./resources/js/components/home/HomeProfesorComponent.vue")["default"]);
 Vue.component('home-alumno-component', __webpack_require__(/*! ./components/home/HomeAlumnoComponent.vue */ "./resources/js/components/home/HomeAlumnoComponent.vue")["default"]);
+Vue.component('home-administrador-component', __webpack_require__(/*! ./components/home/HomeAdministradorComponent.vue */ "./resources/js/components/home/HomeAdministradorComponent.vue")["default"]);
 Vue.component('peticiones-component', __webpack_require__(/*! ./components/home/PeticionesComponent.vue */ "./resources/js/components/home/PeticionesComponent.vue")["default"]);
 Vue.component('asesorias-component', __webpack_require__(/*! ./components/home/AsesoriasComponent.vue */ "./resources/js/components/home/AsesoriasComponent.vue")["default"]);
 Vue.component('welcome-component', __webpack_require__(/*! ./components/WelcomeComponent.vue */ "./resources/js/components/WelcomeComponent.vue")["default"]);
@@ -108421,6 +108977,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AsesoriasComponent_vue_vue_type_template_id_6160d20c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AsesoriasComponent_vue_vue_type_template_id_6160d20c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/home/HomeAdministradorComponent.vue":
+/*!*********************************************************************!*\
+  !*** ./resources/js/components/home/HomeAdministradorComponent.vue ***!
+  \*********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _HomeAdministradorComponent_vue_vue_type_template_id_cbcde658___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./HomeAdministradorComponent.vue?vue&type=template&id=cbcde658& */ "./resources/js/components/home/HomeAdministradorComponent.vue?vue&type=template&id=cbcde658&");
+/* harmony import */ var _HomeAdministradorComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./HomeAdministradorComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/home/HomeAdministradorComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _HomeAdministradorComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _HomeAdministradorComponent_vue_vue_type_template_id_cbcde658___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _HomeAdministradorComponent_vue_vue_type_template_id_cbcde658___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/home/HomeAdministradorComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/home/HomeAdministradorComponent.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/components/home/HomeAdministradorComponent.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_HomeAdministradorComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./HomeAdministradorComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/home/HomeAdministradorComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_HomeAdministradorComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/home/HomeAdministradorComponent.vue?vue&type=template&id=cbcde658&":
+/*!****************************************************************************************************!*\
+  !*** ./resources/js/components/home/HomeAdministradorComponent.vue?vue&type=template&id=cbcde658& ***!
+  \****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_HomeAdministradorComponent_vue_vue_type_template_id_cbcde658___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./HomeAdministradorComponent.vue?vue&type=template&id=cbcde658& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/home/HomeAdministradorComponent.vue?vue&type=template&id=cbcde658&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_HomeAdministradorComponent_vue_vue_type_template_id_cbcde658___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_HomeAdministradorComponent_vue_vue_type_template_id_cbcde658___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

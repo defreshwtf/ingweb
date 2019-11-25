@@ -1,47 +1,6 @@
 <template>
     <div>
         <v-row>
-            <!-- <v-col :cols="8">
-                <v-card>
-                    <v-card-title>idAlumno: {{id_alumno}}</v-card-title>
-                    <v-card-text>
-                        <v-container>
-                            <v-form ref="formAgendaAsesoria" action @submit.prevent="submit">
-                                <v-row align="center" justify="center">
-                                    <v-col :cols="8">
-                                        <v-autocomplete
-                                            :rules="[rules_AgendaAsesoria.requerid]"
-                                            label="materia"
-                                            :items="materiasDisponibles"
-                                            v-model="materiaSeleccionada"
-                                        ></v-autocomplete>
-                                        <v-autocomplete
-                                            :rules="[rules_AgendaAsesoria.requerid]"
-                                            label="profesor"
-                                            :items="info_profesores_by_materia[materiaSeleccionada]"
-                                            v-model="profesorSeleccionado"
-                                        ></v-autocomplete>
-                                        <v-text-field
-                                            :rules="[rules_AgendaAsesoria.requerid, rules_AgendaAsesoria.maxCaracteres]"
-                                            label="tema"
-                                            v-model="tema"
-                                            counter
-                                        ></v-text-field>
-                                    </v-col>
-                                </v-row>
-                                <v-row class="d-flex justify-space-around">
-                                    <v-btn type="submit" outlined color="green">agendar</v-btn>
-                                    <v-btn
-                                        @click="$refs.formAgendaAsesoria.reset()"
-                                        outlined
-                                        color="yellow"
-                                    >reset</v-btn>
-                                </v-row>
-                            </v-form>
-                        </v-container>
-                    </v-card-text>
-                </v-card>
-            </v-col>-->
             <v-col :cols="12">
                 <v-card>
                     <v-card-title>Administrar Peticiones de Asesorias</v-card-title>
@@ -68,7 +27,7 @@
                                     <v-btn color="green" outlined v-on="on">Nueva Peticion</v-btn>
                                 </template>
                                 <v-card>
-                                    <v-card-title>idAlumno: {{id_alumno}}</v-card-title>
+                                    <v-card-title>idAlumno: {{alumno.id}}</v-card-title>
                                     <v-container>
                                         <v-form
                                             ref="formAgendaAsesoria"
@@ -78,6 +37,10 @@
                                             <v-card-text>
                                                 <v-row align="center" justify="center">
                                                     <v-col :cols="8">
+                                                        <v-select label="selecciona filtro"
+                                                            :items="filtrosDisponibles"
+                                                            v-model="filtroSeleccionado"
+                                                        ></v-select>
                                                         <v-autocomplete
                                                             :rules="[rules_AgendaAsesoria.requerid]"
                                                             label="materia"
@@ -87,7 +50,7 @@
                                                         <v-autocomplete
                                                             :rules="[rules_AgendaAsesoria.requerid]"
                                                             label="profesor"
-                                                            :items="info_profesores_by_materia[materiaSeleccionada]"
+                                                            :items="profesoresDisponibles"
                                                             v-model="profesorSeleccionado"
                                                         ></v-autocomplete>
                                                         <v-text-field
@@ -166,7 +129,7 @@
 
 <script>
 export default {
-    props: ["info_profesores_by_materia", "id_alumno"],
+    props: ["alumno"],
     data() {
         return {
             dialog: false,
@@ -186,6 +149,11 @@ export default {
             ],
             peticionesAsesorias: [],
             materiasDisponibles: [],
+            materiasDisponiblesInfo: {},
+            profesoresDisponibles: [],
+            profesoresDisponiblesInfo: {},
+            filtrosDisponibles: ["Materia", "Profesor"],
+            filtroSeleccionado: "",
             materiaSeleccionada: "",
             profesorSeleccionado: "",
             tema: "",
@@ -211,7 +179,7 @@ export default {
             if (this.$refs.formAgendaAsesoria.validate()) {
                 axios
                     .post("http://ingweb.xgab.com/peticionAsesoria", {
-                        idAlumno: this.id_alumno,
+                        idAlumno: this.alumno.id,
                         nomMateria: this.materiaSeleccionada,
                         nomProfesor: this.profesorSeleccionado,
                         tema: this.tema
@@ -297,12 +265,65 @@ export default {
                 });
         }
     },
-    mounted() {
-        Object.keys(this.info_profesores_by_materia).forEach(materia => {
-            this.materiasDisponibles.push(materia);
-        });
+    mounted() {},
+    watch: {
+        filtroSeleccionado(filtro){
+            this.profesoresDisponibles = [];
+            this.materiasDisponibles = [];
+            if(filtro == "Profesor") {
+
+                axios
+                .get(`http://ingweb.xgab.com/profesoresAceptados`)
+                .then(response => {
+                    console.log(response.data);
+                    this.profesoresDisponibles = Object.keys(response.data);
+                    this.profesoresDisponiblesInfo = response.data;
+                    if(this.profesoresDisponibles.length == 1){
+                        this.materiasDisponibles = this.profesoresDisponiblesInfo[this.profesoresDisponibles[0]];
+                    } else{
+                        this.materiasDisponibles = [];
+                    }
+                })
+                .catch(error => {
+                    console.log(error.response) || console.log(error);
+                });
+            } else {
+                axios
+                .get(`http://ingweb.xgab.com/materiasConProfesoresAceptados`)
+                .then(response => {
+                    console.log(response.data);
+                    this.materiasDisponibles = Object.keys(response.data);
+                    this.materiasDisponiblesInfo = response.data;
+                    if(this.materiasDisponibles.length == 1){
+                        this.profesoresDisponibles = this.materiasDisponiblesInfo[this.materiasDisponibles[0]];
+                    } else{
+                        this.profesoresDisponibles = [];
+                    }
+                })
+                .catch(error => {
+                    console.log(error.response) || console.log(error);
+                });
+            }
+        },
+        materiaSeleccionada(v){
+            if(v != ""){
+                if(this.profesoresDisponibles.length == 0){
+                    this.profesoresDisponibles = this.materiasDisponiblesInfo[v];
+                }
+            } else {
+                console.log("vacio");
+            }
+        },
+        profesorSeleccionado(v){
+            if(v != ""){
+                if(this.materiasDisponibles.length == 0){
+                    this.materiasDisponibles = this.profesoresDisponiblesInfo[v];
+                }
+            } else {
+                console.log("vacio");
+            }            
+        },
     },
-    watch: {},
     created() {
         this.getInfoPeticiones();
     }

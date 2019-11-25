@@ -10,33 +10,26 @@
                 >
                     <template #top>
                         <v-toolbar flat color="white">
-                            <v-toolbar-title>Asesorias</v-toolbar-title>
+                            <v-toolbar-title>
+                                <v-btn @click="getInfoAsesorias" outlined color="green">Asesorias</v-btn>
+                            </v-toolbar-title>
                             <v-divider class="mx-4" inset vertical></v-divider>
                             <v-spacer></v-spacer>
                             <v-dialog v-model="showDialog_infoAsesoria" max-width="70vw">
                                 <v-container>
                                     <v-card>
-                                        <v-card-title>idAsesoria: {{id_profesor}}</v-card-title>
+                                        <v-card-title>idAsesoria: {{asesoriaInfo_Dialog.idAsesoria}}</v-card-title>
                                         <v-card-text>
-                                            <v-text-field label="">
-                                            </v-text-field>
+                                            <v-data-table
+                                                :headers="headersPeticions_Asesoria"
+                                                :items="peticionsInfo_Asesoria"
+                                                sort-by="idPeticion"
+                                            >
+                                                <template #item.acciones="{item}">
+                                                        <v-icon @click="eliminarPeticion_en_Asesoria(item)" title="elimina peticion de la asesoria">delete</v-icon>
+                                                </template>
+                                            </v-data-table>
                                         </v-card-text>
-                                        <v-card-actions>
-                                            <!-- <v-container>
-                                                <v-row class="d-flex justify-space-around">
-                                                    <v-btn
-                                                        @click="saveAsesoria"
-                                                        outlined
-                                                        color="green"
-                                                    >guardar</v-btn>
-                                                    <v-btn
-                                                        @click="cancelEditAsesoria"
-                                                        outlined
-                                                        color="red"
-                                                    >Cancel</v-btn>
-                                                </v-row>
-                                            </v-container> -->
-                                        </v-card-actions>
                                     </v-card>
                                 </v-container>
                             </v-dialog>
@@ -50,19 +43,32 @@
                         <v-icon @click="deleteAsesoria(item)" title="eliminar asesoria">delete</v-icon>
                     </template>
                 </v-data-table>
-                <a @asesoriaAgendada="catchEvent_asesoriaAgendada"></a>
             </v-col>
         </v-row>
     </div>
 </template>
 
 <script>
-import EventBus from '../../app';
+import EventBus from "../../app";
 export default {
     props: ["id_profesor"],
     data() {
         return {
             showDialog_infoAsesoria: false,
+            asesoriaInfo_Dialog: {},
+            headersPeticions_Asesoria: [
+                {
+                    text: "ID Peticion",
+                    align: "left",
+                    sortable: false,
+                    value: "idPeticion"
+                },
+                { text: "ID Alumno", value: "idAlumno" },
+                { text: "Nombre Alumno", value: "nombreAlumno" },
+                { text: "Tema Propuesto", value: "tema" },
+                { text: "Acciones", value: "acciones" },
+            ],
+            peticionsInfo_Asesoria: [],
             headersAsesorias: [
                 {
                     text: "idAsesoria",
@@ -74,53 +80,74 @@ export default {
                 { text: "Tema", value: "tema" },
                 { text: "Fecha-Hora", value: "fecha_hora" },
                 { text: "Lugar", value: "lugar" },
+                { text: "#Peticiones", value: "numPeticiones" },
                 { text: "Acciones", value: "action", sortable: false }
             ],
             asesoriasInfo: [],
         };
     },
     methods: {
-        catchEvent_asesoriaAgendada(asesoriaInfo){
-            this.asesoriasInfo.push(asesoriaInfo);
-            console.log("asesoria agendada correctamente!!!");
-        },
-        getInfoAsesorias(){
+        getInfoAsesorias() {
             axios
                 .get("http://ingweb.xgab.com/asesorias")
                 .then(response => {
-                    // console.log(response.data);
-                    response.data.forEach(e => {
-                        this.asesoriasInfo.push(e);
-                    });
+                    console.log(response.data);
+                    this.asesoriasInfo = response.data;
+                    // response.data.forEach(e => {
+                    //     this.asesoriasInfo.push(e);
+                    // });
                 })
                 .catch(error => {
                     console.log(error.response) || console.log(error);
                 });
         },
         showMoreInfo_Asesoria(asesoria) {
-            this.showDialog_infoAsesoria = true;
+            let idAsesoria = asesoria.idAsesoria;
+            axios
+                .get(`http://ingweb.xgab.com/asesoria/peticiones/${idAsesoria}`)
+                .then(response => {
+                    console.log(response.data);
+                    this.asesoriaInfo_Dialog = asesoria;
+                    this.peticionsInfo_Asesoria = response.data;
+                    this.showDialog_infoAsesoria = true;
+                })
+                .catch(error => {
+                    console.log(error.response) || console.log(error);
+                });
         },
         deleteAsesoria(asesoria) {
             let idAsesoria = asesoria.idAsesoria;
             axios
                 .delete("http://ingweb.xgab.com/asesorias/" + idAsesoria)
-                .then( response => {
+                .then(response => {
                     console.log(response.data);
                     let index = this.asesoriasInfo.indexOf(asesoria);
                     this.asesoriasInfo.splice(index, 1);
                 })
-                .catch( error => {
+                .catch(error => {
                     console.log(error.response) || console.log(error);
                 });
         },
+        eliminarPeticion_en_Asesoria(peticionInfo){
+            axios
+            .get(`http://ingweb.xgab.com/asesoria/eliminaPeticion/${peticionInfo.idPeticion}`)
+            .then(response => {
+                console.log(response.data);
+                let index = this.peticionsInfo_Asesoria.indexOf(peticionInfo);
+                this.peticionsInfo_Asesoria.splice(index, 1);
+            })
+            .catch(error => {
+                console.log(error.response) || console.log(error);
+            });
+        },
         cancelEditAsesoria(asesoria) {},
-        saveAsesoria(asesoria) {},
+        saveAsesoria(asesoria) {}
     },
     created() {
         this.getInfoAsesorias();
-        EventBus.$on("asesoriaAgendada",asesoria => {
+        EventBus.$on("asesoriaAgendada", asesoria => {
             this.asesoriasInfo.push(asesoria);
         });
-    },
+    }
 };
 </script>

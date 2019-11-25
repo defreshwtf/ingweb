@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProfesorsTable extends Migration
+class CreateAdministradorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,13 @@ class CreateProfesorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('profesors', function (Blueprint $table) {
+        Schema::create('administradors', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('estado')->default("pendiente");
             $table->timestamps();
 
             $table->bigInteger("idUser")->unsigned();
-            $table->foreign("idUser")->references("id")->on("users")->onDelete("cascade");
+            $table->foreign("idUser")->references("id")->on("users");
         });
-
-        DB::update("ALTER TABLE profesors AUTO_INCREMENT = 20191121;");
     }
 
     /**
@@ -32,6 +29,6 @@ class CreateProfesorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('profesors');
+        Schema::dropIfExists('administradors');
     }
 }

@@ -46,6 +46,7 @@ class AsesoriasController extends Controller
                 $info["materia"] = $asesoria->materia->nombre;
                 $info["alumnos"] = $asesoria->alumnos;
                 $info["idAsesoria"] = $asesoria->id;
+                $info["numPeticiones"] = count($asesoria->peticions->where("estado", "!=", "rechazada"));
                 array_push($dataResponse, $info);
             }
         }
@@ -153,5 +154,45 @@ class AsesoriasController extends Controller
         $asesoria->delete();
 
         return response()->json($asesoria,200);
+    }
+
+
+    /**
+     * rechaza una peticion en una asesoria cuando la asesoira ya fue agendada
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function eliminarPeticion_en_Asesoria($id){
+
+        $peticion = Peticion::where("id", $id)->first();
+        $peticion->estado = "rechazada";
+        $peticion->save();
+        return response()->json("",200);
+    }
+        
+    /**
+     * muestra la informacion de las peticiones de una asesoria.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showInfoPeticiones_Asesoria(Request $request, $id){
+        $peticiones = Asesoria::where("id",$id)->first()->peticions->where("estado","!=","rechazada");
+
+        $responseData = [];
+
+        foreach($peticiones as $peticion) {
+            $peticionInfo = [];
+            $peticionInfo["idPeticion"] = $peticion->id;
+            $peticionInfo["idAlumno"] = $peticion->alumno->id;
+            $peticionInfo["nombreAlumno"] = $peticion->alumno->user->name;
+            $peticionInfo["tema"] = $peticion->tema;
+            array_push($responseData, $peticionInfo);
+        }
+
+        
+        return response()->json($responseData,200);
     }
 }

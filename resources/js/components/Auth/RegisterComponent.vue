@@ -25,7 +25,7 @@
                                     <v-text-field
                                         label="password"
                                         v-model="password"
-                                        :rules="[rules.requerid, rules.espaciosBlanco]"
+                                        :rules="[rules.requerid, rules.espaciosBlanco, rules.min]"
                                         counter
                                         :type="'password'"
                                     ></v-text-field>
@@ -94,6 +94,7 @@ export default {
                     !!v.length ||
                     "campo requerido",
                 max: v => (!!v && v.length <= 20) || "max 20 caracteres",
+                min: v => (!!v && v.length >= 8) || "min 8 caracteres",
                 email: v =>
                     /^[\w|\.]+@[\w|\.]+$/.test(v) || "ingresa un email valido",
                 passwordConfirm: v =>

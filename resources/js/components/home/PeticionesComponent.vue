@@ -11,7 +11,9 @@
                     <!-- <template #item.add="{ item }"></template> -->
                     <template #top>
                         <v-toolbar flat color="white">
-                            <v-toolbar-title>Peticiones</v-toolbar-title>
+                            <v-toolbar-title>
+                                <v-btn @click="getInfoPeticiones" outlined color="green">Peticiones</v-btn>
+                            </v-toolbar-title>
                             <v-divider class="mx-4" inset vertical></v-divider>
                             <v-spacer></v-spacer>
                             <v-dialog v-model="dialog" max-width="70vw">
@@ -183,7 +185,7 @@
 </template>
 
 <script>
-import EventBus from '../../app';
+import EventBus from "../../app";
 export default {
     props: ["id_profesor"],
     data() {
@@ -227,7 +229,6 @@ export default {
             } else if (estado === "aceptada") {
                 return "green";
             }
-            console.log(estado);
             return "red";
         },
         getInfoPeticiones() {
@@ -235,9 +236,10 @@ export default {
                 .get("http://ingweb.xgab.com/peticionAsesoria")
                 .then(response => {
                     // console.log(response.data);
-                    response.data.forEach(e => {
-                        this.peticionesAsesorias.push(e);
-                    });
+                    this.peticionesAsesorias = response.data;
+                    // response.data.forEach(e => {
+                    //     this.peticionesAsesorias.push(e);
+                    // });
                 })
                 .catch(error => {
                     console.log(error.response) || console.log(error);
@@ -312,14 +314,14 @@ export default {
             let index = this.peticionesSeleccionadas.indexOf(peticionInfo);
             this.peticionesSeleccionadas.splice(index, 1);
             this.peticionesAsesorias.push(peticionInfo);
-            if(this.peticionesSeleccionadas.length == 0){
+            if (this.peticionesSeleccionadas.length == 0) {
                 this.materia = "";
             }
         },
         addAlumno_to_Asesoria(peticionInfo) {
-            if(this.materia == ""){
+            if (this.materia == "") {
                 this.materia = peticionInfo.materia;
-            } else if(this.materia != peticionInfo.materia){
+            } else if (this.materia != peticionInfo.materia) {
                 alert(`la materia para la asesoria actual es: ${this.materia}`);
                 return;
             }

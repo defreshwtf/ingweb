@@ -114,6 +114,7 @@ export default {
                         }, 1000);
                     })
                     .catch(error => {
+                        console.log(error.response) || console.log(error);
                         this.auth_error = error.response.data.errors["email"][0];
                         this.overlay = false;
                         this.$refs.form.validate();
